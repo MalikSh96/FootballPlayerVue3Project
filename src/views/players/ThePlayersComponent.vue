@@ -31,14 +31,16 @@
           <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
             {{ player.name }}
           </th>
-          <td class="px-6 py-4">
+          <td class="px-6 py-3">
             {{ player.age }}
           </td>
-          <td class="px-6 py-4" >
+          <td class="px-6 py-3" v-for="(c, key) in club" :key="key" v-bind="player.club">
+            {{ c.name }}
             <!-- {{ player.club }} -->
-            <button type="button" @click="getPlayerClub(player.club)"> 
+            <!-- <button type="button" @click="getPlayerClub(player.club)"> 
               click
-            </button>
+            </button> -->
+            <!-- <PlayerClubComponent :playerClubId="club" /> -->
               
           </td>
           <td class="px-6 py-3">
@@ -53,7 +55,6 @@
         </tr>
       </tbody>
     </table>
-    <PlayerClubComponent :playerClubId="club" />
     <!--modal-->
     <transition name="fade" appear>
       <div class="modal-overlay" v-if="modalIsVisible" @click="closeModal()"></div>
@@ -113,12 +114,12 @@
 
 <script>
 import PlayerModalComponent from '@/components/helpers/PlayerModalComponent.vue'
-import PlayerClubComponent from '@/components/helpers/PlayerClubComponent.vue'
+// import PlayerClubComponent from '@/components/helpers/PlayerClubComponent.vue'
 
 export default {
   components: {
     PlayerModalComponent,
-    PlayerClubComponent
+    // PlayerClubComponent
   },
   data() {
     return {
@@ -193,7 +194,10 @@ export default {
 		players () {
       console.log('called', this.perPage)
 			this.setPages();
-		}
+		},
+    perPage(newValue) {
+      localStorage.perPage = newValue;
+    }
 	},
 	created(){
     //To get the data at a "popular" point is to get it inside either the created or mounted lifecycle hook
@@ -213,6 +217,26 @@ export default {
     .then(data => (this.players = data))
     .catch(err => console.log(err.message))
 	},
+  mounted() {
+    if(localStorage.perPage) {
+      this.perPage = localStorage.perPage
+    }
+
+    const playersArr = Object.values(this.players.items)
+    for(let i = 0; i < playersArr.length; i++)
+    {
+      // console.log('ttttt', playersArr[i].club)
+      this.getPlayerClub(playersArr[i].club)
+    }
+  },
+  // async mounted() {
+  //   // const playersArr = Object.values(this.players.items)
+  //   // for(let i = 0; i < playersArr.length; i++)
+  //   // {
+  //   //   // console.log('ttttt', playersArr[i].club)
+  //   //   await this.getPlayerClub(playersArr[i].club)
+  //   // }
+  // },
 }
 </script>
 

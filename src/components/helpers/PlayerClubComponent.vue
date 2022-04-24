@@ -4,12 +4,13 @@ const props = defineProps({
     playerClubId: {}
 })
 
-// let clubs = {}
-
 //emit data back?
 </script>
 
 <template>
+    <td class="px-6 py-4" >
+        
+    </td>
     <p class="px-6 py-4" v-for="(club, key) in props.playerClubId" :key="key">
         {{ club.name }}
     </p>
