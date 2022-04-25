@@ -92,7 +92,7 @@
           <button type="button" class="w-10 h-10 text-indigo-600 transition-colors duration-150 
             rounded-full focus:shadow-outline hover:bg-indigo-100" 
             v-for="(pageNumber, key) in pages.slice(page-1, page+5)" :key="key" 
-            @click="page = pageNumber"> {{ pageNumber }} 
+            @click="page = pageNumber; loadPlayers(page, limit)"> {{ pageNumber }} 
           </button>
         </li>
         <li class="page-item">
@@ -115,6 +115,7 @@
 <script>
 import PlayerModalComponent from '@/components/helpers/PlayerModalComponent.vue'
 // import PlayerClubComponent from '@/components/helpers/PlayerClubComponent.vue'
+// import reactive from 'vue'
 
 export default {
   components: {
@@ -124,12 +125,13 @@ export default {
   data() {
     return {
 			page: 1,
-			perPage: 5,
+			perPage: 20,
 			pages: [],		
       players: [],
       club: {},
       modalIsVisible: false,
-      showPlayer: {}
+      showPlayer: {},
+      limit: 20
     }
   }, 
   methods: {
@@ -138,6 +140,21 @@ export default {
       console.log('bool before', this.modalIsVisible)
       this.modalIsVisible = value
       console.log('bool after', this.modalIsVisible)
+    },
+    loadPlayers(currentPage, limitation) {
+      console.log('BEFORE FETCH page ' + this.page + ' and limit ' + this.limit)
+      fetch(`https://futdb.app/api/players?page=${currentPage}&limit=${limitation}`, {
+        method: "GET",
+        headers: {
+          'content-type': 'application/json',
+          'X-AUTH-TOKEN': process.env.VUE_APP_FUT_API_KEY 
+        }
+      })
+      .then((response) => response.json())
+      .then(data => (this.players = data))
+      .catch(err => console.log(err.message))
+      console.log('fetched players', this.players)
+      
     },
     getPlayerClub (clubId) {
       fetch('https://futdb.app/api/clubs/' + clubId, {
@@ -152,15 +169,20 @@ export default {
       .catch(err => console.log(err.message))
     },
     setPages () {
-			let numberOfPages = Math.ceil(Object.values(this.players.items).length / this.perPage);
-			for (let index = 1; index <= numberOfPages; index++) {
+      if(localStorage.perPage) {
+        this.perPage = localStorage.perPage
+      }
+      //math ceil rounds a number up to the next largest integer
+			// let numberOfPages = Math.ceil(Object.values(this.players.items).length / this.perPage);
+      console.log('pushing p')
+			for (let index = 1; index <= this.players.page_total; index++) {
 				this.pages.push(index);
 			}
 		},
 		paginate (players) {
 			let page = this.page;
 			let perPage = this.perPage;
-      console.log('what is pag', perPage)
+      // console.log('what is pag', perPage)
 			let from = (page * perPage) - perPage;
 			let to = (page * perPage);
 			return players.slice(from, to);
@@ -187,6 +209,7 @@ export default {
   computed: {
 		displayedPlayers () {
       //Converting object to array
+      console.log('page total', this.players.page_total)
 			return this.paginate(Object.values(this.players.items));
 		},
 	},
@@ -197,6 +220,14 @@ export default {
 		},
     perPage(newValue) {
       localStorage.perPage = newValue;
+    },
+    page (newPage) {
+      console.log('new page', newPage)
+      this.page = newPage
+    },
+    limit (newLimit) {
+      console.log('new limit', newLimit)
+      this.limit = newLimit
     }
 	},
 	created(){
@@ -206,16 +237,18 @@ export default {
     //fetch is async and returns a promise
     //then() fires a callback function after the fetch is done
     //response.json is also async and returns a promise
-    fetch('https://futdb.app/api/players?limit=20', {
-      method: "GET",
-      headers: {
-        'content-type': 'application/json',
-        'X-AUTH-TOKEN': process.env.VUE_APP_FUT_API_KEY 
-      }
-    })
-    .then((response) => response.json())
-    .then(data => (this.players = data))
-    .catch(err => console.log(err.message))
+    // fetch('https://futdb.app/api/players?limit=20', {
+    //   method: "GET",
+    //   headers: {
+    //     'content-type': 'application/json',
+    //     'X-AUTH-TOKEN': process.env.VUE_APP_FUT_API_KEY 
+    //   }
+    // })
+    // .then((response) => response.json())
+    // .then(data => (this.players = data))
+    // .catch(err => console.log(err.message))
+    console.log('page ' + this.page + ' and limit ' + this.limit)
+    this.loadPlayers(this.page, this.limit)
 	},
   mounted() {
     if(localStorage.perPage) {
