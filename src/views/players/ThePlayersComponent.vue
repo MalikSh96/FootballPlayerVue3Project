@@ -8,7 +8,8 @@
       <option v-for="(page, key) in players.items.length" :key="key"> {{ page }}</option>
     </select>
     
-    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+    <table-component :PlayersData="players"/>
+    <!-- <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr>
           <th scope="col" class="px-6 py-3">
@@ -35,14 +36,14 @@
             {{ player.age }}
           </td>
           <td class="px-6 py-3" v-for="(c, key) in club" :key="key" v-bind="player.club">
-            {{ c.name }}
+            {{ c.name }} -->
             <!-- {{ player.club }} -->
             <!-- <button type="button" @click="getPlayerClub(player.club)"> 
               click
             </button> -->
             <!-- <PlayerClubComponent :playerClubId="club" /> -->
               
-          </td>
+          <!-- </td>
           <td class="px-6 py-3">
             <button type="button" class="btn btn-primary" @click="openModal(player.id)">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -54,7 +55,7 @@
           </td>
         </tr>
       </tbody>
-    </table>
+    </table> -->
     <!--modal-->
     <transition name="fade" appear>
       <div class="modal-overlay" v-if="modalIsVisible" @click="closeModal()"></div>
@@ -116,11 +117,13 @@
 import PlayerModalComponent from '@/components/helpers/PlayerModalComponent.vue'
 // import PlayerClubComponent from '@/components/helpers/PlayerClubComponent.vue'
 // import reactive from 'vue'
+import TableComponent from '@/components/helpers/TableComponent.vue'
 
 export default {
   components: {
     PlayerModalComponent,
     // PlayerClubComponent
+    TableComponent
   },
   data() {
     return {
@@ -255,12 +258,12 @@ export default {
       this.perPage = localStorage.perPage
     }
 
-    const playersArr = Object.values(this.players.items)
-    for(let i = 0; i < playersArr.length; i++)
-    {
-      // console.log('ttttt', playersArr[i].club)
-      this.getPlayerClub(playersArr[i].club)
-    }
+    // const playersArr = Object.values(this.players.items)
+    // for(let i = 0; i < playersArr.length; i++)
+    // {
+    //   // console.log('ttttt', playersArr[i].club)
+    //   this.getPlayerClub(playersArr[i].club)
+    // }
   },
   // async mounted() {
   //   // const playersArr = Object.values(this.players.items)
