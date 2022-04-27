@@ -1,5 +1,5 @@
 <template>
-<!-- {{PlayersData.items[0]}} -->
+{{PlayersData[0]}}
     <div class="p-10">
         <div>
             <input type="text" class="border-2 mb-5 rounded h-10 p-2" 
@@ -10,7 +10,7 @@
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th v-for="(column, index) in columns" v-bind:key="index" 
-                    scope="col" class="px-6 py-3 cursor-pointer" @click="sortRecords(index)">
+                      scope="col" class="px-6 py-3 cursor-pointer" @click="sortRecords(index)">
                         {{column}}
 
                         <div v-if="sortDirection == null || sortDirection === 'desc'">
@@ -59,20 +59,20 @@
 
         <!--modal-->
         <transition name="fade" appear>
-        <div class="modal-overlay" v-if="modalIsVisible" @click="closeModal()"></div>
+            <div class="modal-overlay" v-if="modalIsVisible" @click="closeModal()"></div>
         </transition>
         <transition name="slide" appear>
-        <div class="modal relative bg-white rounded-lg shadow dark:bg-gray-700" v-if="modalIsVisible">
-            <PlayerModalComponent :showPlayer="showPlayer"/>
-            <button type="button"  class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg 
-            text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" 
-            @click="closeModal()"
-            >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
-            </button>
-        </div>
+            <div class="modal relative bg-white rounded-lg shadow dark:bg-gray-700" v-if="modalIsVisible">
+                <PlayerModalComponent :showPlayer="showPlayer"/>
+                <button type="button"  class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg 
+                text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" 
+                @click="closeModal()"
+                >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+                </button>
+            </div>
         </transition>
         <!--modal-->
     </div>
@@ -81,11 +81,38 @@
 <script>
 import PlayerModalComponent from '@/components/helpers/PlayerModalComponent.vue'
 
+const mapToArray = (arr = []) => {
+    const rowsArrOfArr = [];
+    arr.forEach(function(obj) {
+        const key = Object.values(obj);
+        // console.log('key', key)
+        const value = key
+        // console.log('value',value)
+        rowsArrOfArr.push([value]);
+    });
+    return rowsArrOfArr;
+};
+
 const performSearch = (rows, term) => {
-    console.log('checking rows again', rows)
-    const results = rows.filter(
+    console.log('yessir', rows)
+    let rowsArrOfArr = [];
+    // const mapToArray = (arr = []) => {
+    //     arr.forEach(function(obj) {
+    //         const key = Object.values(obj);
+    //         console.log('key', key)
+    //         const value = key
+    //         console.log('value',value)
+    //         rowsArrOfArr.push([value]);
+    //     });
+    //     return rowsArrOfArr;
+    // };
+    rowsArrOfArr = mapToArray(rows)
+    console.log('checking rows again', rowsArrOfArr)
+
+    const results = rowsArrOfArr.filter(
         row => row.join(" ").toLowerCase().includes(term.toLowerCase())
     )
+    console.log('no sir', results)
     return results;
 }
 
@@ -95,13 +122,13 @@ export default {
     },
     props: {
         PlayersData: Object,
-        
     },
     data () {
         return {
             modalIsVisible: false,
             showPlayer: {},
             term: '',
+            rawRows: Array,
             // rawRows: [
             //     [
             //     "Manoj", "24", "Software Developer", "1997"
@@ -134,7 +161,9 @@ export default {
         }
     },
     methods: {
+
         sortRecords (index) {
+            //checking sort direction
             if (this.sortIndex === index) {
                 switch (this.sortDirection) {
                     case null:
@@ -150,23 +179,32 @@ export default {
             } else {
                 this.sortDirection = 'asc'
             }
+
             this.sortIndex = index;
+            
             if (!this.sortDirection) {
-                this.rows = performSearch(Object.values(this.PlayersData.items), this.term);
+                this.rawRows = mapToArray(this.PlayersData)
+                console.log('test the rwas', this.rawRows)
+                this.rows = performSearch(this.rawRows, this.term);
                 return;
             }
+            //sorting
             this.rows = this.rows.sort(
                 (rowA, rowB) => {
                     if (this.sortDirection === 'desc') {
-                        return Object.values(rowB)[2].localeCompare(Object.values(rowA)[2])
+                        // console.log('if', rowB.name)
+                        return rowB.name.localeCompare(rowA.name)
+                        // return Object.values(rowB)[2].localeCompare(Object.values(rowA)[2])
+
                     }
-                    return Object.values(rowA)[2].localeCompare(Object.values(rowB)[2])
+                    return rowA.name.localeCompare(rowB.name)
+                    // return Object.values(rowA)[2].localeCompare(Object.values(rowB)[2])
                 }
             )
         },
         onSearch (e) {
             this.term = e.target.value;
-            this.rows = performSearch(Object.values(this.PlayersData.items), this.term);
+            this.rows = performSearch(this.PlayersData, this.term);
         },
         openModal(id) {
             this.modalIsVisible = true
@@ -178,7 +216,7 @@ export default {
                 }
             })
             .then((response) => response.json())
-            .then(data => (this.showPlayer = data/*, console.log('player', this.player)*/))
+            .then(data => (this.showPlayer = data))
             .catch(err => console.log(err.message))
                     
             console.log('after', this.showPlayer) 
@@ -188,13 +226,10 @@ export default {
         },
     },
     mounted () {
-        // this.rows = [...this.rawRows];
-        let p = [];
-        // console.log('data of players before', this.PlayersData.items)
-        p = Object.values(this.PlayersData.items)
-        // console.log('data of players before', p)
-        this.rows = [...p]
-        console.log('rows data', this.rows)
+        this.rows = this.PlayersData
+    },
+    updated () {
+        this.rows = this.PlayersData
     }
 }
 </script>

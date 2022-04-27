@@ -8,7 +8,7 @@
       <option v-for="(page, key) in players.items.length" :key="key"> {{ page }}</option>
     </select>
     
-    <table-component :PlayersData="players"/>
+    <table-component :PlayersData="displayedPlayers"/>
     <!-- <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr>
@@ -93,7 +93,7 @@
           <button type="button" class="w-10 h-10 text-indigo-600 transition-colors duration-150 
             rounded-full focus:shadow-outline hover:bg-indigo-100" 
             v-for="(pageNumber, key) in pages.slice(page-1, page+5)" :key="key" 
-            @click="page = pageNumber; loadPlayers(page, limit)"> {{ pageNumber }} 
+            @click="page = pageNumber; /*loadPlayers(page, limit)*/"> {{ pageNumber }} 
           </button>
         </li>
         <li class="page-item">
