@@ -57,7 +57,7 @@
       </tbody>
     </table> -->
     <!--modal-->
-    <transition name="fade" appear>
+    <!-- <transition name="fade" appear>
       <div class="modal-overlay" v-if="modalIsVisible" @click="closeModal()"></div>
     </transition>
     <transition name="slide" appear>
@@ -72,7 +72,7 @@
           </svg>
         </button>
       </div>
-    </transition>
+    </transition> -->
 
     <nav aria-label="Page navigation">
       <ul class="inline-flex space-x-2">
@@ -114,14 +114,14 @@
 </template>
 
 <script>
-import PlayerModalComponent from '@/components/helpers/PlayerModalComponent.vue'
+// import PlayerModalComponent from '@/components/helpers/PlayerModalComponent.vue'
 // import PlayerClubComponent from '@/components/helpers/PlayerClubComponent.vue'
 // import reactive from 'vue'
 import TableComponent from '@/components/helpers/TableComponent.vue'
 
 export default {
   components: {
-    PlayerModalComponent,
+    // PlayerModalComponent,
     // PlayerClubComponent
     TableComponent
   },
@@ -132,18 +132,18 @@ export default {
 			pages: [],		
       players: [],
       club: {},
-      modalIsVisible: false,
-      showPlayer: {},
+      // modalIsVisible: false,
+      // showPlayer: {},
       limit: 20
     }
   }, 
   methods: {
-    showModal (value) {
-      console.log('value', value)
-      console.log('bool before', this.modalIsVisible)
-      this.modalIsVisible = value
-      console.log('bool after', this.modalIsVisible)
-    },
+    // showModal (value) {
+    //   console.log('value', value)
+    //   console.log('bool before', this.modalIsVisible)
+    //   this.modalIsVisible = value
+    //   console.log('bool after', this.modalIsVisible)
+    // },
     loadPlayers(currentPage, limitation) {
       console.log('BEFORE FETCH page ' + this.page + ' and limit ' + this.limit)
       fetch(`https://futdb.app/api/players?page=${currentPage}&limit=${limitation}`, {
@@ -190,24 +190,24 @@ export default {
 			let to = (page * perPage);
 			return players.slice(from, to);
 		},
-    openModal(id) {
-      this.modalIsVisible = true
-      fetch('https://futdb.app/api/players/' + id, {
-        method: "GET",
-        headers: {
-          'content-type': 'application/json',
-          'X-AUTH-TOKEN': process.env.VUE_APP_FUT_API_KEY 
-        }
-      })
-      .then((response) => response.json())
-      .then(data => (this.showPlayer = data/*, console.log('player', this.player)*/))
-      .catch(err => console.log(err.message))
+    // openModal(id) {
+    //   this.modalIsVisible = true
+    //   fetch('https://futdb.app/api/players/' + id, {
+    //     method: "GET",
+    //     headers: {
+    //       'content-type': 'application/json',
+    //       'X-AUTH-TOKEN': process.env.VUE_APP_FUT_API_KEY 
+    //     }
+    //   })
+    //   .then((response) => response.json())
+    //   .then(data => (this.showPlayer = data/*, console.log('player', this.player)*/))
+    //   .catch(err => console.log(err.message))
             
-      console.log('after', this.showPlayer) 
-    },
-    closeModal() {
-      this.modalIsVisible = false
-    },
+    //   console.log('after', this.showPlayer) 
+    // },
+    // closeModal() {
+    //   this.modalIsVisible = false
+    // },
   },
   computed: {
 		displayedPlayers () {
@@ -277,7 +277,7 @@ export default {
 </script>
 
 <style scoped>
-button.page-link {
+/* button.page-link {
 	display: inline-block;
 }
 button.page-link {
@@ -333,6 +333,6 @@ button.page-link {
 .slide-enter,
 .slide-leave-to {
   transform: translateY(-50%) translateX(100vw);
-}
+} */
 </style>
 
