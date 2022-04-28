@@ -1,5 +1,5 @@
 <template>
-{{PlayersData[0]}}
+<!-- {{PlayersData[0]}} -->
     <div class="p-10">
         <div>
             <input type="text" class="border-2 mb-5 rounded h-10 p-2" 
@@ -9,10 +9,9 @@
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                    <th v-for="(column, index) in columns" v-bind:key="index" 
-                      scope="col" class="px-6 py-3 cursor-pointer" @click="sortRecords(index)">
+                    <th v-for="(column, index) in columns" v-bind:key="index" @click="sortRecords(index)" 
+                      scope="col" class="px-6 py-3 cursor-pointer">
                         {{column}}
-
                         <div v-if="sortDirection == null || sortDirection === 'desc'">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z" />
@@ -29,10 +28,10 @@
             <tbody>
                 <tr v-for="(row, index) in rows" v-bind:key="index" 
                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <!-- <td v-for="(rowItem, itemIndex) in row" v-bind:key="itemIndex" class="px-6 py-3">
+                    <td v-for="(rowItem, itemIndex) in row" v-bind:key="itemIndex" class="px-6 py-3">
                         {{rowItem}}
-                    </td> -->
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                    </td>
+                    <!-- <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                         {{ row.name }}
                     </th>
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
@@ -40,12 +39,12 @@
                     </th>
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                         {{ row.club }}
-                    </th>
+                    </th> -->
                     <!-- <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                         {{ row.details }}
                     </th> -->
                     <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                        <button type="button" class="btn btn-primary" @click="openModal(row.id)">
+                        <button type="button" class="btn btn-primary" @click="openModal(row[0])">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                                 <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274
@@ -81,38 +80,10 @@
 <script>
 import PlayerModalComponent from '@/components/helpers/PlayerModalComponent.vue'
 
-const mapToArray = (arr = []) => {
-    const rowsArrOfArr = [];
-    arr.forEach(function(obj) {
-        const key = Object.values(obj);
-        // console.log('key', key)
-        const value = key
-        // console.log('value',value)
-        rowsArrOfArr.push([value]);
-    });
-    return rowsArrOfArr;
-};
-
 const performSearch = (rows, term) => {
-    console.log('yessir', rows)
-    let rowsArrOfArr = [];
-    // const mapToArray = (arr = []) => {
-    //     arr.forEach(function(obj) {
-    //         const key = Object.values(obj);
-    //         console.log('key', key)
-    //         const value = key
-    //         console.log('value',value)
-    //         rowsArrOfArr.push([value]);
-    //     });
-    //     return rowsArrOfArr;
-    // };
-    rowsArrOfArr = mapToArray(rows)
-    console.log('checking rows again', rowsArrOfArr)
-
-    const results = rowsArrOfArr.filter(
+    const results = rows.filter(
         row => row.join(" ").toLowerCase().includes(term.toLowerCase())
     )
-    console.log('no sir', results)
     return results;
 }
 
@@ -128,29 +99,11 @@ export default {
             modalIsVisible: false,
             showPlayer: {},
             term: '',
-            rawRows: Array,
-            // rawRows: [
-            //     [
-            //     "Manoj", "24", "Software Developer", "1997"
-            //     ],
-            //     [
-            //     "John", "26", "Lawyer", "1995"
-            //     ],
-            //     [
-            //     "Lily", "34", "Saleswoman", "1987"
-            //     ],
-            //     [
-            //     "Rachel", "34", "Saleswoman", "1987"
-            //     ],
-            //     [
-            //     "Ross", "34", "Barber", "1987"
-            //     ],
-            //     [
-            //     "Chandler", "30", "Salesman", "1991"
-            //     ]
-            // ],
+            rawRows: [],
+            updatedRows: [],
             rows: [],
             columns: [
+                'Id',
                 'Name',
                 'Age',
                 'Club',
@@ -161,7 +114,6 @@ export default {
         }
     },
     methods: {
-
         sortRecords (index) {
             //checking sort direction
             if (this.sortIndex === index) {
@@ -183,28 +135,26 @@ export default {
             this.sortIndex = index;
             
             if (!this.sortDirection) {
-                this.rawRows = mapToArray(this.PlayersData)
-                console.log('test the rwas', this.rawRows)
+                //this part should reset the display to how it originally were -- wip
                 this.rows = performSearch(this.rawRows, this.term);
                 return;
             }
+
             //sorting
             this.rows = this.rows.sort(
                 (rowA, rowB) => {
-                    if (this.sortDirection === 'desc') {
-                        // console.log('if', rowB.name)
-                        return rowB.name.localeCompare(rowA.name)
-                        // return Object.values(rowB)[2].localeCompare(Object.values(rowA)[2])
-
-                    }
-                    return rowA.name.localeCompare(rowB.name)
-                    // return Object.values(rowA)[2].localeCompare(Object.values(rowB)[2])
+                if (this.sortDirection === 'desc') {
+                    console.log('index', index)
+                    return rowB[index].localeCompare(rowA[index]);
+                }
+                return rowA[index].localeCompare(rowB[index]);
                 }
             )
         },
         onSearch (e) {
             this.term = e.target.value;
-            this.rows = performSearch(this.PlayersData, this.term);
+            this.rows = performSearch(this.rawRows, this.term);
+            console.log('searching', this.rawRows)
         },
         openModal(id) {
             this.modalIsVisible = true
@@ -226,10 +176,21 @@ export default {
         },
     },
     mounted () {
-        this.rows = this.PlayersData
+        let id, name, age, club
+        for(let data of this.PlayersData) {
+            // console.log('inside for', data)
+            id = data.id.toString()
+            name = data.name
+            age = data.age.toString()
+            club = data.club.toString()
+            // console.log('what ' + name + " and " + age + " also " + club)
+            this.rawRows.push([id, name, age, club])
+        }
+        this.rows = [...this.rawRows]
+        // console.log('array', this.rows)
     },
     updated () {
-        this.rows = this.PlayersData
+        // this.rows = [...this.updatedRows]
     }
 }
 </script>
