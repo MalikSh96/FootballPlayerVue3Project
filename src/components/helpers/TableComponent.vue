@@ -110,7 +110,8 @@ export default {
                 'Details'
             ],
             sortIndex: null,
-            sortDirection: null
+            sortDirection: null,
+            clubs: [],
         }
     },
     methods: {
@@ -174,15 +175,29 @@ export default {
         closeModal() {
             this.modalIsVisible = false
         },
+        async getClub(clubId) {
+            await fetch('https://futdb.app/api/clubs/' + clubId, {
+                method: "GET",
+                headers: {
+                'content-type': 'application/json',
+                'X-AUTH-TOKEN': process.env.VUE_APP_FUT_API_KEY 
+                }
+            })
+            .then((response) => response.json())
+            .then(data => (this.clubs = data, console.log('clubs', this.clubs.item.name)))
+            .catch(err => console.log(err.message))
+        }
     },
-    mounted () {
+    async mounted () {
         let id, name, age, club
         for(let data of this.PlayersData) {
             // console.log('inside for', data)
             id = data.id.toString()
             name = data.name
             age = data.age.toString()
-            club = data.club.toString()
+            await this.getClub(data.club)
+            console.log('datatatata', this.clubs.item)
+            club = this.clubs.item.name
             // console.log('what ' + name + " and " + age + " also " + club)
             this.rawRows.push([id, name, age, club])
         }

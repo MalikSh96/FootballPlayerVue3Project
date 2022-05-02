@@ -29,7 +29,7 @@
           <button type="button" class="w-10 h-10 text-indigo-600 transition-colors duration-150 
             rounded-full focus:shadow-outline hover:bg-indigo-100" 
             v-for="(pageNumber, key) in pages.slice(page-1, page+5)" :key="key" 
-            @click="page = pageNumber; /*loadPlayers(page, limit)*/"> {{ pageNumber }} 
+            @click="loadPlayers(pageNumber, limit);page = pageNumber;"> {{ pageNumber }} 
           </button>
         </li>
         <li class="page-item">
@@ -62,7 +62,7 @@ export default {
 			perPage: 20,
 			pages: [],		
       players: [],
-      club: {},
+      // club: {},
       limit: 20
     }
   }, 
@@ -82,18 +82,18 @@ export default {
       console.log('fetched players', this.players)
       
     },
-    getPlayerClub (clubId) {
-      fetch('https://futdb.app/api/clubs/' + clubId, {
-        method: "GET",
-        headers: {
-          'content-type': 'application/json',
-          'X-AUTH-TOKEN': process.env.VUE_APP_FUT_API_KEY 
-        }
-      })
-      .then((response) => response.json())
-      .then(data => (this.club = data, console.log('club', this.club)))
-      .catch(err => console.log(err.message))
-    },
+    // getPlayerClub (clubId) {
+    //   fetch('https://futdb.app/api/clubs/' + clubId, {
+    //     method: "GET",
+    //     headers: {
+    //       'content-type': 'application/json',
+    //       'X-AUTH-TOKEN': process.env.VUE_APP_FUT_API_KEY 
+    //     }
+    //   })
+    //   .then((response) => response.json())
+    //   .then(data => (this.club = data, console.log('club', this.club)))
+    //   .catch(err => console.log(err.message))
+    // },
     setPages () {
       if(localStorage.perPage) {
         this.perPage = localStorage.perPage
@@ -161,6 +161,11 @@ export default {
     //   this.getPlayerClub(playersArr[i].club)
     // }
   },
+  // beforeUpdate() {
+  //   console.log('updating dom ', this.players)
+  //   return this.players
+  //   // return this.paginate(Object.values(this.players.items));
+  // }
 }
 </script>
 
