@@ -1,5 +1,5 @@
 <template>
-<!-- {{PlayersData[0]}} -->
+{{rows}}
     <div class="p-10">
         <div>
             <input type="text" class="border-2 mb-5 rounded h-10 p-2" 
@@ -100,7 +100,6 @@ export default {
             showPlayer: {},
             term: '',
             rawRows: [],
-            updatedRows: [],
             rows: [],
             columns: [
                 'Id',
@@ -184,29 +183,50 @@ export default {
                 }
             })
             .then((response) => response.json())
-            .then(data => (this.clubs = data, console.log('clubs', this.clubs.item.name)))
+            .then(data => (this.clubs = data/*, console.log('clubs', this.clubs.item.name)*/))
             .catch(err => console.log(err.message))
-        }
+        },
+        // async displayTheData(rows) {
+        //     console.log('player data check', rows)
+        //     console.log('raw rows data check', this.rawRows)
+        //     let id, name, age, club
+        //     for(let data of rows) {
+        //         id = data.id.toString()
+        //         name = data.name
+        //         age = data.age.toString()
+        //         await this.getClub(data.club)
+        //         club = this.clubs.item.name
+        //         this.rawRows.push([id, name, age, club])
+        //     }
+        //     this.rows = [...this.rawRows]
+        // }
     },
+    // computed: {
+    //     playerContent() {
+    //         console.log('player content', this.PlayersData)
+    //         return this.displayTheData(this.PlayersData)
+    //     }
+    // },
+    // watch: {
+    //     rows(newData) {
+    //         console.log('new data?', newData)
+    //         this.rows = newData
+    //     }
+    // },
     async mounted () {
+        // await this.playerContent
+        console.log('player data check', this.PlayersData)
         let id, name, age, club
         for(let data of this.PlayersData) {
-            // console.log('inside for', data)
             id = data.id.toString()
             name = data.name
             age = data.age.toString()
             await this.getClub(data.club)
-            console.log('datatatata', this.clubs.item)
             club = this.clubs.item.name
-            // console.log('what ' + name + " and " + age + " also " + club)
             this.rawRows.push([id, name, age, club])
         }
         this.rows = [...this.rawRows]
-        // console.log('array', this.rows)
     },
-    updated () {
-        // this.rows = [...this.updatedRows]
-    }
 }
 </script>
 
