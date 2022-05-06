@@ -1,10 +1,10 @@
 <template>
-{{rows}}
+<!-- {{rows}} -->
     <div class="p-10">
-        <div>
+        <!-- <div>
             <input type="text" class="border-2 mb-5 rounded h-10 p-2" 
                 placeholder="Search records" @input="onSearch"/>
-        </div>
+        </div> -->
 
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -79,6 +79,7 @@
 
 <script>
 import PlayerModalComponent from '@/components/helpers/PlayerModalComponent.vue'
+// import {  } from 'vue';
 
 const performSearch = (rows, term) => {
     const results = rows.filter(
@@ -93,6 +94,7 @@ export default {
     },
     props: {
         PlayersData: Object,
+        UpdatedPlayers: Object
     },
     data () {
         return {
@@ -186,36 +188,16 @@ export default {
             .then(data => (this.clubs = data/*, console.log('clubs', this.clubs.item.name)*/))
             .catch(err => console.log(err.message))
         },
-        // async displayTheData(rows) {
-        //     console.log('player data check', rows)
-        //     console.log('raw rows data check', this.rawRows)
-        //     let id, name, age, club
-        //     for(let data of rows) {
-        //         id = data.id.toString()
-        //         name = data.name
-        //         age = data.age.toString()
-        //         await this.getClub(data.club)
-        //         club = this.clubs.item.name
-        //         this.rawRows.push([id, name, age, club])
-        //     }
-        //     this.rows = [...this.rawRows]
-        // }
     },
-    // computed: {
-    //     playerContent() {
-    //         console.log('player content', this.PlayersData)
-    //         return this.displayTheData(this.PlayersData)
-    //     }
-    // },
-    // watch: {
-    //     rows(newData) {
-    //         console.log('new data?', newData)
-    //         this.rows = newData
-    //     }
-    // },
+    watch: {
+        rows() {
+            console.log('CHILD new data check?', this.rows)
+        }
+    },
     async mounted () {
         // await this.playerContent
-        console.log('player data check', this.PlayersData)
+        // console.log('raw rows check', this.rawRows)
+        // console.log('CHILD player data check', this.PlayersData)
         let id, name, age, club
         for(let data of this.PlayersData) {
             id = data.id.toString()
@@ -227,6 +209,27 @@ export default {
         }
         this.rows = [...this.rawRows]
     },
+    async updated () {
+        console.log('CHILD UPDATED CALLED BEFORE CONVERT', this.UpdatedPlayers)
+        Object.entries(this.UpdatedPlayers);
+        console.log('CHILD UPDATED CALLED AFTER CONVERT', this.UpdatedPlayers)
+        let id, name, age
+        let testarr = []
+        for(let content of this.UpdatedPlayers) {
+            id = content.id.toString()
+            name = content.name
+            age = content.age.toString()
+            // await this.getClub(content.club)
+            // club = this.clubs.item.name
+            testarr.push([id,name,age])
+            // this.rawRows.push([id, name, age, club])
+        }
+        //emptying rows array
+        this.rows.splice(0)
+        console.log('CHILD UPDATED ROWS ARRAY BEEFORE FILLING', this.rows)
+        this.rows = [...testarr]
+        console.log('CHILD UPDATED ROWS ARRAY AFTER FILLING', this.rows)
+    }
 }
 </script>
 

@@ -1,6 +1,6 @@
 <template>
   <html class="dark">
-    {{jugadores.ballers.items[0]}}
+    <!-- {{jugadores.ballers.items[0]}} -->
     <h1 class="text-2xl font-bold text-indigo-600">The Players</h1>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
       <label class="pr-2 italic">Row limit</label>
@@ -10,16 +10,16 @@
         <option v-for="(page, key) in jugadores.ballers.items.length" :key="key"> {{ page }}</option>
       </select>
       <!-- <h1>check: {{displayedPlayers}}</h1> -->
-      <h1>page is? {{page}} || per page is? {{perPage}}</h1>
-      <table-component :key="page" :PlayersData="displayedPlayers"/>
-
-      <nav aria-label="Page navigation">
+      <h1>page is? {{page}} || limit is? {{limit}}</h1>
+      <!-- <table-component :key="page" :PlayersData="displayedPlayers"/> -->
+      <pagination-component :PlayersData="jugadores.ballers.items"/>
+      <!-- <nav aria-label="Page navigation">
         <ul class="inline-flex space-x-2">
           <li class="page-item">
             <button type="button" 
               class="flex items-center justify-center w-10 h-10 text-indigo-600 
               transition-colors duration-150 rounded-full focus:shadow-outline hover:bg-indigo-100" 
-              v-if="page != 1" @click="page--; loadJugadores(page, perPage);"
+              v-if="page != 1" @click="page--; loadJugadores(page, limit);"
             > 
               <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
                 <path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 
@@ -32,11 +32,11 @@
             <button type="button" class="w-10 h-10 text-indigo-600 transition-colors duration-150 
               rounded-full focus:shadow-outline hover:bg-indigo-100" 
               v-for="(pageNumber, key) in pages.slice(page-1, page+5)" :key="key" 
-              @click="page = pageNumber; loadJugadores(pageNumber, perPage);"> {{ pageNumber }} 
+              @click="page = pageNumber; loadJugadores(pageNumber, limit);"> {{ pageNumber }} 
             </button>
           </li>
           <li class="page-item">
-            <button type="button" @click="page++; loadJugadores(page, perPage);" v-if="page < pages.length" class="flex items-center justify-center w-10 h-10 text-indigo-600 
+            <button type="button" @click="page++; loadJugadores(page, limit);" v-if="page < pages.length" class="flex items-center justify-center w-10 h-10 text-indigo-600 
               transition-colors duration-150 bg-white rounded-full focus:shadow-outline hover:bg-indigo-100"
             >
               <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
@@ -49,29 +49,36 @@
           <p class="py-2 italic">Current page: {{ page }}</p>
           <p class="py-2 italic">|| Total pages: {{ jugadores.ballers.page_total }}</p>
         </ul>
-      </nav>	
+      </nav>	 -->
     </div>
   </html>
 </template>
 
 <script>
-import TableComponent from '@/components/helpers/TableComponent.vue'
-import { reactive, onUpdated } from 'vue'
+// import TableComponent from '@/components/helpers/TableComponent.vue'
+import PaginationComponent from '@/components/helpers/PaginationComponent.vue'
+
+import { onBeforeUpdate, reactive } from 'vue'
 
 export default {
   components: {
-    TableComponent
+    // TableComponent,
+    PaginationComponent
   },
   setup() {
     //const, because obect itself won't change, just the properties inside
     const jugadores = reactive({
       ballers: []
     })
-    onUpdated(() => { //composition api way
-      console.log('updating dom ', jugadores.ballers)
-      return jugadores.ballers
-      // return this.paginate(Object.values(this.players.items));
+    onBeforeUpdate(() => {
+      console.log('beforeUpdate', jugadores.ballers)
+      jugadores
     })
+    // onUpdated(() => { //composition api way
+    //   console.log('updating dom ', jugadores.ballers)
+    //   jugadores.ballers
+    //   // return this.paginate(Object.values(this.players.items));
+    // })
     return { jugadores }
   },
   data() {
@@ -86,8 +93,7 @@ export default {
   }, 
   methods: {
     async loadJugadores(cP,cL) {
-      // console.log('component key before', this.componentKey)
-      console.log('BEFORE FETCH page ' + this.page + ' and per page ' + this.perPage)
+      console.log('BEFORE FETCH page ' + cP + ' and limit ' + cL)
       await fetch(`https://futdb.app/api/players?page=${cP}&limit=${cL}`, {
         method: "GET",
         headers: {
@@ -98,26 +104,10 @@ export default {
       .then((response) => response.json())
       .then(data => (this.jugadores.ballers = data))
       .catch(err => console.log(err.message))
-      console.log('AFTER FETCH page ' + this.page + ' and per page ' + this.perPage)
-      // console.log('fetched jugadores', this.jugadores.ballers)
-      // this.componentKey++
-      // console.log('component key after', this.componentKey)
+      console.log('AFTER FETCH page ' + this.page + ' and limit ' + this.perPage)
+      console.log('fetched jugadores inside our method', this.jugadores.ballers)
+      // this.setPages()
     },
-    // async loadPlayers(currentPage, limitation) {
-    //   console.log('BEFORE FETCH page ' + this.page + ' and limit ' + this.limit)
-    //   await fetch(`https://futdb.app/api/players?page=${currentPage}&limit=${limitation}`, {
-    //     method: "GET",
-    //     headers: {
-    //       'content-type': 'application/json',
-    //       'X-AUTH-TOKEN': process.env.VUE_APP_FUT_API_KEY 
-    //     }
-    //   })
-    //   .then((response) => response.json())
-    //   .then(data => (this.players = data))
-    //   .catch(err => console.log(err.message))
-    //   console.log('fetched players', this.players)
-      
-    // },
     setPages () {
       if(localStorage.perPage) {
         this.perPage = localStorage.perPage
@@ -140,23 +130,12 @@ export default {
 		displayedPlayers () {
       //Converting object to array
       console.log('page total', this.jugadores.ballers.page_total)
+      console.log('new updated jugadores', this.jugadores.ballers.items)
 			return this.paginate(Object.values(this.jugadores.ballers.items));
 		},
 	},
 	watch: { //watch triggers a function whenever a reactive property changes
-    jugadores: {
-      handler() {
-      console.log('jugadores called', this.perPage)
-			this.setPages();
-      },
-      deep: true
-    },
-		// players () {
-    //   console.log('called', this.perPage)
-		// 	this.setPages();
-		// },
     perPage(newValue) {
-      console.log('per page change', newValue)
       localStorage.perPage = newValue;
     },
     page (newPage) {
@@ -170,26 +149,15 @@ export default {
     }
 	},
 	created(){
+    console.log('created in parent')
     //To get the data at a "popular" point is to get it inside either the created or mounted lifecycle hook
     //A vue component have lifecycle hooks which fires at different points of their lifecycle
     //The mounted lifecycle hook fires when the component mounts the DOM
     //fetch is async and returns a promise
     //then() fires a callback function after the fetch is done
     //response.json is also async and returns a promise
-    // console.log('page ' + this.page + ' and limit ' + this.limit)
-    this.loadJugadores(this.page, this.perPage)
-    // this.loadPlayers(this.page, this.limit)
+    this.loadJugadores(1, 20)
 	},
-  mounted() {
-    if(localStorage.perPage) {
-      this.perPage = localStorage.perPage
-    }
-  },
-  // async beforeUpdate() { //options api way
-  //   console.log('updating dom ', this.jugadores.ballers)
-  //   return this.jugadores.ballers
-  //   // return this.paginate(Object.values(this.players.items));
-  // }
 }
 </script>
 

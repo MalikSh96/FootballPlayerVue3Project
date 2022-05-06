@@ -1,14 +1,17 @@
 <template>
-  <ThePlayersComponent />
+  <!-- <ThePlayersComponent /> -->
+  <the-players-component-copy />
 </template>
 
 <script>
-import ThePlayersComponent from '@/views/players/ThePlayersComponent.vue'
+// import ThePlayersComponent from '@/views/players/ThePlayersComponent.vue'
+import ThePlayersComponentCopy from '@/views/players/ThePlayersComponentCopy.vue'
 
 export default {
   name: 'App',
   components: {
-    ThePlayersComponent
+    // ThePlayersComponent,
+    ThePlayersComponentCopy
   }
 }
 </script>
