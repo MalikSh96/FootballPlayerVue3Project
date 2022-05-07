@@ -1,10 +1,10 @@
 <template>
 <!-- {{rows}} -->
     <div class="p-10">
-        <!-- <div>
+        <div>
             <input type="text" class="border-2 mb-5 rounded h-10 p-2" 
                 placeholder="Search records" @input="onSearch"/>
-        </div> -->
+        </div>
 
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -210,25 +210,26 @@ export default {
         this.rows = [...this.rawRows]
     },
     async updated () {
-        console.log('CHILD UPDATED CALLED BEFORE CONVERT', this.UpdatedPlayers)
-        Object.entries(this.UpdatedPlayers);
-        console.log('CHILD UPDATED CALLED AFTER CONVERT', this.UpdatedPlayers)
+        // console.log('CHILD UPDATED CALLED BEFORE CONVERT', this.UpdatedPlayers)
+        Object.entries(this.UpdatedPlayers); //converting so we can loop through the content
+        // console.log('CHILD UPDATED CALLED AFTER CONVERT', this.UpdatedPlayers)
+        // this.clubs.splice(0)
+        // console.log('CHILD CLUB CHECK', this.clubs)
         let id, name, age
         let testarr = []
         for(let content of this.UpdatedPlayers) {
             id = content.id.toString()
             name = content.name
             age = content.age.toString()
-            // await this.getClub(content.club)
+            // await this.getClub(content.club) //triggers "infinite" attempts, which then always calls the updated hook 
             // club = this.clubs.item.name
-            testarr.push([id,name,age])
-            // this.rawRows.push([id, name, age, club])
+            testarr.push([id, name, age])
         }
         //emptying rows array
         this.rows.splice(0)
-        console.log('CHILD UPDATED ROWS ARRAY BEEFORE FILLING', this.rows)
+        // console.log('CHILD UPDATED ROWS ARRAY BEEFORE FILLING', this.rows)
         this.rows = [...testarr]
-        console.log('CHILD UPDATED ROWS ARRAY AFTER FILLING', this.rows)
+        // console.log('CHILD UPDATED ROWS ARRAY AFTER FILLING', this.rows)
     }
 }
 </script>

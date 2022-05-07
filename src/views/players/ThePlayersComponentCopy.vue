@@ -31,12 +31,12 @@
             <li class="page-item">
                 <button type="button" class="w-10 h-10 text-indigo-600 transition-colors duration-150 
                 rounded-full focus:shadow-outline hover:bg-indigo-100" 
-                v-for="(pageNumber, key) in testPages" :key="key" 
+                v-for="(pageNumber, key) in setPages" :key="key" 
                 @click="page = pageNumber; getPlayers(page);"> {{ pageNumber }} 
                 </button>
             </li>
             <li class="page-item">
-                <button type="button" @click="page++; getPlayers(page);" v-if="page < testPages.length" class="flex items-center justify-center w-10 h-10 text-indigo-600 
+                <button type="button" @click="page++; getPlayers(page);" v-if="page < pagesTotal" class="flex items-center justify-center w-10 h-10 text-indigo-600 
                 transition-colors duration-150 bg-white rounded-full focus:shadow-outline hover:bg-indigo-100"
                 >
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
@@ -47,7 +47,7 @@
                 </button>
             </li>
           <p class="py-2 italic">Current page: {{ page }}</p>
-          <p class="py-2 italic">|| Total pages: {{ testPages.length }}</p>
+          <p class="py-2 italic">|| Total pages: {{ pagesTotal }}</p>
         </ul>
       </nav>
 
@@ -77,7 +77,7 @@ export default {
     return {
 			page: 1,
       pagesTotal: null,
-      pages: [],
+      // pages: [],
       perPage: 20,
       testPages: [1,2,3,4,5],
       newPlayers: [],
@@ -131,6 +131,15 @@ export default {
     },
 
   },
+  computed: {
+    setPages() {
+      let total = []
+      for(let num = 1; num <= this.pagesTotal; num++) {
+        total.push(num)
+      }
+      return total.slice(this.page-1, this.page+5)
+    }
+  },
 	watch: { //watch triggers a function whenever a reactive property changes
     page(newPage, oldPage) {
       console.log('PARENT new page', newPage)
@@ -146,6 +155,7 @@ export default {
     },
 	},
 	created(){
+    this.getPagesTotal()
     this.loadJugadores(1, 20)
     this.prevPlayers = this.jugadores
     console.log('PARENT created', this.prevPlayers)
