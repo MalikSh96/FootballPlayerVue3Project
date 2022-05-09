@@ -62,6 +62,7 @@ export default {
         playersData: Object,
         filterKey: String,
         columns: Array,
+        UpdatedPlayers: Object
     }, 
     data() {
         return {
@@ -95,6 +96,11 @@ export default {
                 })
             }
             return data
+        }
+    },
+    watch: {
+        rows() {
+            console.log('CHILD new data check?', this.rows)
         }
     },
     methods: {
@@ -147,10 +153,22 @@ export default {
             // this.getClub(data.club)
             // club = this.club
             // console.log('WHAT IS CLUB', club)
-            // this.rawRows.push([id, name, age, club])
             this.rows.push({id, name, age})
         }
     },
+    async updated () {
+        Object.entries(this.UpdatedPlayers); //converting so we can loop through the content
+        let id, name, age
+        let testarr = []
+        for(let content of this.UpdatedPlayers) {
+            id = content.id
+            name = content.name
+            age = content.age
+            testarr.push({id, name, age})
+        }
+        this.rows.splice(0)
+        this.rows = testarr
+    }
 }
 </script>
 

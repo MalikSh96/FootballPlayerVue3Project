@@ -16,7 +16,8 @@
       <form id="search">
         <input name="query" v-model="searchQuery" class="border-2 mb-5 rounded h-10 p-2" placeholder="Search records">
       </form>
-      <table-backup-component :key="page" :columns="columns" :playersData="prevPlayers.ballers.items" :filterKey="searchQuery"/>
+      <table-backup-component :key="page" :columns="columns" :playersData="prevPlayers.ballers.items" 
+        :filterKey="searchQuery" :UpdatedPlayers="newPlayers.items"/>
       
       <nav aria-label="Page navigation">
         <ul class="inline-flex space-x-2">
