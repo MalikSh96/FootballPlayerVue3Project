@@ -7,7 +7,8 @@
       <select v-model="perPage" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 shadow-sm
                                     border-black-100 placeholder-blueGray-300 text-black bg-white rounded text-sm shadow
                                     focus:outline-none focus:ring-indigo-600 ease-linear transition-all duration-150">
-        <option v-for="(page, key) in jugadores.ballers.items.length" :key="key"> {{ page }}</option>
+        <!-- <option v-for="(page, key) in jugadores.ballers.items.length" :key="key"> {{ page }}</option> -->
+        <option v-for="index in 20" :key="index"> {{ index }}</option>
       </select>
       <!-- <h1>check: {{displayedPlayers}}</h1> -->
       <h1>page is? {{page}} || limit is? {{limit}}</h1>
@@ -19,7 +20,7 @@
                 <button type="button" 
                 class="flex items-center justify-center w-10 h-10 text-indigo-600 
                 transition-colors duration-150 rounded-full focus:shadow-outline hover:bg-indigo-100" 
-                v-if="page != 1" @click="page--; getPlayers(page)"
+                v-if="page != 1" @click="page--; getPlayers(page, perPage)"
                 > 
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
                     <path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 
@@ -32,11 +33,11 @@
                 <button type="button" class="w-10 h-10 text-indigo-600 transition-colors duration-150 
                 rounded-full focus:shadow-outline hover:bg-indigo-100" 
                 v-for="(pageNumber, key) in setPages" :key="key" 
-                @click="page = pageNumber; getPlayers(page);"> {{ pageNumber }} 
+                @click="page = pageNumber; getPlayers(page, perPage);"> {{ pageNumber }} 
                 </button>
             </li>
             <li class="page-item">
-                <button type="button" @click="page++; getPlayers(page);" v-if="page < pagesTotal" class="flex items-center justify-center w-10 h-10 text-indigo-600 
+                <button type="button" @click="page++; getPlayers(page, perPage);" v-if="page < pagesTotal" class="flex items-center justify-center w-10 h-10 text-indigo-600 
                 transition-colors duration-150 bg-white rounded-full focus:shadow-outline hover:bg-indigo-100"
                 >
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
@@ -86,7 +87,7 @@ export default {
     }
   }, 
   methods: {
-    async loadJugadores(cP,cL) {
+    async loadJugadores(cP, cL) {
       // console.log('PARENT BEFORE FETCH page ' + cP + ' and limit ' + cL)
       await fetch(`https://futdb.app/api/players?page=${cP}&limit=${cL}`, {
         method: "GET",
@@ -96,14 +97,15 @@ export default {
         }
       })
       .then((response) => response.json())
-      .then(data => (this.jugadores.ballers = data))
+      .then(data => (this.jugadores.ballers = data, this.pagesTotal = data.page_total))
       .catch(err => console.log(err.message))
+      console.log('AFTER FETCH PAGES TOTAL', this.pagesTotal)
       // console.log('PARENT AFTER FETCH page ' + this.page + ' and limit ' + this.perPage)
       // console.log('PARENT fetched jugadores inside our method', this.prevPlayers.ballers.items)
       // this.setPages()
     },
-    async getPagesTotal() { //gets page total
-      await fetch(`https://futdb.app/api/players`, {
+    async getPagesTotal(per) { //gets page total
+      await fetch(`https://futdb.app/api/players?limit=${per}`, {
         method: "GET",
         headers: {
           'content-type': 'application/json',
@@ -113,12 +115,11 @@ export default {
       .then((response) => response.json())
       .then(data => (this.pagesTotal = data.page_total))
       .catch(err => console.log(err.message))
-      // console.log('AFTER FETCH PAGES TOTAL', this.pagesTotal)
+      console.log('AFTER FETCH PAGES TOTAL', this.pagesTotal)
     },
-    async getPlayers(page) {
-      // await this.getPagesTotal() // maybe don't call this everytime, move it later
+    async getPlayers(page, per) {
       console.log('PARENT BEFORE FETCH GET PLAYERS ' + page)
-      await fetch(`https://futdb.app/api/players?page=${page}`, {
+      await fetch(`https://futdb.app/api/players?page=${page}&limit=${per}`, {
         method: "GET",
         headers: {
           'content-type': 'application/json',
@@ -145,6 +146,9 @@ export default {
       console.log('PARENT new page', newPage)
       console.log('PARENT old page', oldPage)
     },
+    perPage(newValue) {
+      localStorage.perPage = newValue;
+    },
     prevPlayers() {
       console.log('PARENT inside prev players watch', this.prevPlayers.items)
       // console.log('inside prev players watch AFTER', this.prevPlayers.items)
@@ -155,8 +159,12 @@ export default {
     },
 	},
 	created(){
-    this.getPagesTotal()
-    this.loadJugadores(1, 20)
+    if(localStorage.perPage) {
+      console.log('PARENT LOCALSTORAGE PERPAGE', localStorage.perPage)
+      this.perPage = localStorage.perPage
+    }
+    // this.getPagesTotal(this.perPage)
+    this.loadJugadores(1, this.perPage)
     this.prevPlayers = this.jugadores
     console.log('PARENT created', this.prevPlayers)
 	},
