@@ -1,24 +1,20 @@
 <template>
   <html class="dark">
-    <!-- {{jugadores.ballers.items[0]}} -->
     <h1 class="text-2xl font-bold text-indigo-600">The Players</h1>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
       <label class="pr-2 italic">Row limit</label>
       <select v-model="perPage" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 shadow-sm
                                     border-black-100 placeholder-blueGray-300 text-black bg-white rounded text-sm shadow
                                     focus:outline-none focus:ring-indigo-600 ease-linear transition-all duration-150">
-        <!-- <option v-for="(page, key) in jugadores.ballers.items.length" :key="key"> {{ page }}</option> -->
-        <!-- <option v-for="index = 5 in 20" :key="index"> {{ index }}</option> -->
         <option v-for="index in setLimitRange" :key="index"> {{ index }}</option>
       </select>
-      <!-- <h1>check: {{displayedPlayers}}</h1> -->
       <h1>page is? {{page}} || limit is? {{limit}}</h1>
 
       <form id="search">
         <input name="query" v-model="searchQuery" class="border-2 mb-5 rounded h-10 p-2" placeholder="Search records">
       </form>
       <table-backup-component :key="page" :columns="columns" :playersData="prevPlayers.ballers.items" 
-        :filterKey="searchQuery" :UpdatedPlayers="newPlayers.items"/>
+        :filterKey="searchQuery"/>
       
       <nav aria-label="Page navigation">
         <ul class="inline-flex space-x-2">
@@ -26,7 +22,7 @@
                 <button type="button" 
                 class="flex items-center justify-center w-10 h-10 text-indigo-600 
                 transition-colors duration-150 rounded-full focus:shadow-outline hover:bg-indigo-100" 
-                v-if="page != 1" @click="page--; getPlayers(page, perPage)"
+                v-if="page != 1" @click="page--; loadJugadores(page, perPage)"
                 > 
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
                     <path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 
@@ -39,11 +35,11 @@
                 <button type="button" class="w-10 h-10 text-indigo-600 transition-colors duration-150 
                 rounded-full focus:shadow-outline hover:bg-indigo-100" 
                 v-for="(pageNumber, key) in setPages" :key="key" 
-                @click="page = pageNumber; getPlayers(page, perPage);"> {{ pageNumber }} 
+                @click="page = pageNumber; loadJugadores(page, perPage);"> {{ pageNumber }} 
                 </button>
             </li>
             <li class="page-item">
-                <button type="button" @click="page++; getPlayers(page, perPage);" v-if="page < pagesTotal" class="flex items-center justify-center w-10 h-10 text-indigo-600 
+                <button type="button" @click="page++; loadJugadores(page, perPage);" v-if="page < pagesTotal" class="flex items-center justify-center w-10 h-10 text-indigo-600 
                 transition-colors duration-150 bg-white rounded-full focus:shadow-outline hover:bg-indigo-100"
                 >
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
@@ -63,16 +59,12 @@
 </template>
 
 <script>
-// import TableComponent from '@/components/helpers/TableComponent.vue'
-// import PaginationComponent from '@/components/helpers/PaginationComponent.vue'
 import TableBackupComponent from '@/components/helpers/TableBackupComponent.vue'
 
 import {  reactive } from 'vue'
 
 export default {
   components: {
-    // TableComponent,
-    // PaginationComponent
     TableBackupComponent
   },
   setup() {
@@ -89,12 +81,10 @@ export default {
         'id',
         'name',
         'age',
-        // 'club',
-        // 'details'
+        'club',
       ],
 			page: 1,
       pagesTotal: null,
-      // pages: [],
       perPage: 20,
       testPages: [1,2,3,4,5],
       newPlayers: [],
@@ -113,19 +103,6 @@ export default {
       })
       .then((response) => response.json())
       .then(data => (this.jugadores.ballers = data, this.pagesTotal = data.page_total))
-      .catch(err => console.log(err.message))
-      console.log('AFTER FETCH PAGES TOTAL', this.pagesTotal)
-    },
-    async getPagesTotal(per) { //gets page total
-      await fetch(`https://futdb.app/api/players?limit=${per}`, {
-        method: "GET",
-        headers: {
-          'content-type': 'application/json',
-          'X-AUTH-TOKEN': process.env.VUE_APP_FUT_API_KEY 
-        }
-      })
-      .then((response) => response.json())
-      .then(data => (this.pagesTotal = data.page_total))
       .catch(err => console.log(err.message))
       console.log('AFTER FETCH PAGES TOTAL', this.pagesTotal)
     },
@@ -171,9 +148,6 @@ export default {
     prevPlayers() {
       console.log('PARENT inside prev players watch', this.prevPlayers.items)
     },
-    newPlayers() {
-      console.log('PARENT what is the NEW player data', this.newPlayers.items)
-    },
 	},
 	async created(){
     if(localStorage.perPage) {
@@ -186,7 +160,7 @@ export default {
 	},
   async beforeUpdate(){
     console.log('TEST WHEN LIMIT VALUE IS CHANGED', this.perPage)
-    console.log('PARENT BEFORE UPDATE CALLED', this.newPlayers)
+    console.log('PARENT BEFORE UPDATE CALLED', this.prevPlayers)
   }
 }
 </script>

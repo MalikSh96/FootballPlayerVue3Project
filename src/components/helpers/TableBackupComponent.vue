@@ -62,7 +62,6 @@ export default {
         playersData: Object,
         filterKey: String,
         columns: Array,
-        UpdatedPlayers: Object
     }, 
     data() {
         return {
@@ -99,9 +98,25 @@ export default {
         }
     },
     watch: {
-        rows() {
-            console.log('CHILD new data check?', this.rows)
-        }
+        // rows() {
+        //     console.log('CHILD new data check?', this.rows)
+        // },
+        playersData: async function() {
+            console.log('PLAYERS WATCH', this.playersData)
+            if(this.playersData) {
+                // console.log('CHILD WATCH playersData CHECK', this.playersData)
+                let id, name, age, club
+                for(let data of this.playersData) {
+                    id = data.id
+                    name = data.name
+                    age = data.age
+                    await this.getClub(data.club)
+                    club = this.club
+                    // console.log('WHAT IS CLUB', club)
+                    this.rows.push({id, name, age, club})
+                }
+            }
+        },
     },
     methods: {
         sortBy(key) {
@@ -143,32 +158,6 @@ export default {
             this.modalIsVisible = false
         },
     },
-    beforeMount () {
-        console.log('CHILD playersData CHECK', this.playersData)
-        let id, name, age
-        for(let data of this.playersData) {
-            id = data.id
-            name = data.name
-            age = data.age
-            // this.getClub(data.club)
-            // club = this.club
-            // console.log('WHAT IS CLUB', club)
-            this.rows.push({id, name, age})
-        }
-    },
-    async updated () {
-        Object.entries(this.UpdatedPlayers); //converting so we can loop through the content
-        let id, name, age
-        let testarr = []
-        for(let content of this.UpdatedPlayers) {
-            id = content.id
-            name = content.name
-            age = content.age
-            testarr.push({id, name, age})
-        }
-        this.rows.splice(0)
-        this.rows = testarr
-    }
 }
 </script>
 
