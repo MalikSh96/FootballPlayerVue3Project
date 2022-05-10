@@ -8,7 +8,8 @@
                                     border-black-100 placeholder-blueGray-300 text-black bg-white rounded text-sm shadow
                                     focus:outline-none focus:ring-indigo-600 ease-linear transition-all duration-150">
         <!-- <option v-for="(page, key) in jugadores.ballers.items.length" :key="key"> {{ page }}</option> -->
-        <option v-for="index in 20" :key="index"> {{ index }}</option>
+        <!-- <option v-for="index = 5 in 20" :key="index"> {{ index }}</option> -->
+        <option v-for="index in setLimitRange" :key="index"> {{ index }}</option>
       </select>
       <!-- <h1>check: {{displayedPlayers}}</h1> -->
       <h1>page is? {{page}} || limit is? {{limit}}</h1>
@@ -149,6 +150,14 @@ export default {
         total.push(num)
       }
       return total.slice(this.page-1, this.page+5)
+    },
+    setLimitRange() {
+      let range = []
+      for(let i = 5; i <= 20; i++)
+      {
+        range.push(i)
+      }
+      return range
     }
   },
 	watch: { //watch triggers a function whenever a reactive property changes
@@ -171,12 +180,12 @@ export default {
       console.log('PARENT LOCALSTORAGE PERPAGE', localStorage.perPage)
       this.perPage = localStorage.perPage
     }
-    // this.getPagesTotal(this.perPage)
     this.loadJugadores(1, this.perPage)
     this.prevPlayers = this.jugadores
     console.log('PARENT created', this.prevPlayers)
 	},
   async beforeUpdate(){
+    console.log('TEST WHEN LIMIT VALUE IS CHANGED', this.perPage)
     console.log('PARENT BEFORE UPDATE CALLED', this.newPlayers)
   }
 }
