@@ -8,7 +8,7 @@
                                     focus:outline-none focus:ring-indigo-600 ease-linear transition-all duration-150">
         <option v-for="index in setLimitRange" :key="index"> {{ index }}</option>
       </select>
-      <h1>page is? {{page}} || limit is? {{limit}}</h1>
+      <h1>page is? {{page}} || display per page is? {{perPage}}</h1>
 
       <form id="search">
         <input name="query" v-model="searchQuery" class="border-2 mb-5 rounded h-10 p-2" placeholder="Search records">

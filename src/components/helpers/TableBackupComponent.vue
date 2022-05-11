@@ -1,5 +1,14 @@
 <template>
     <div>
+        Filter by age:
+        <select class="border-2 mb-5 rounded h-10 p-1" v-model="searchOperator">
+            <option value="=">Equals to</option>
+            <option value=">">Bigger than</option>
+            <option value="<">Lesser than</option>
+        </select>
+        <input v-model="age" class="border-2 mb-5 rounded h-10 p-2" placeholder="Age" type="number">
+    </div>
+    <div>
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
@@ -71,6 +80,8 @@ export default {
             sortKey: '',
             sortOrders: this.columns.reduce((o, key) => ((o[key] = 1), o), {}),
             club: '',
+            searchOperator: '',
+            age: ''
         }
     },
     computed: {
@@ -93,8 +104,8 @@ export default {
                     return (a === b ? 0 : a > b ? 1 : -1) * order
                 })
             }
-            return data
-        }
+            return data.filter(this.filterByAge)
+        },
     },
     watch: {
         playersData: async function() {
@@ -119,6 +130,19 @@ export default {
         },
         capitalize(str) {
             return str.charAt(0).toUpperCase() + str.slice(1)
+        },
+        filterByAge(data) {
+            // no operator selected or no age typed, don't filter : 
+            if (this.searchOperator.length === 0 || this.age.length === 0) {
+                return true;
+            }
+            if (this.searchOperator === '>') {
+                return (data.age > this.age); 
+            } else  if (this.searchOperator === '<') {
+                return (data.age < this.age);
+            } else if (this.searchOperator === '=') {
+                return (data.age === this.age)
+            }
         },
         async getClub(clubId) {
             await fetch('https://futdb.app/api/clubs/' + clubId, {
