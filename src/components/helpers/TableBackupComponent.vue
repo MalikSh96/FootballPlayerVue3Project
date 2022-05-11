@@ -115,7 +115,6 @@ export default {
         sortBy(key) {
             this.sortKey = key
             this.sortOrders[key] = this.sortOrders[key] * -1
-
         },
         capitalize(str) {
             return str.charAt(0).toUpperCase() + str.slice(1)
