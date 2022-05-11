@@ -1,19 +1,13 @@
 <template>
-  <!-- <ThePlayersComponent /> -->
-  <!-- <the-players-component-copy /> -->
   <players-component-backup />
 </template>
 
 <script>
-// import ThePlayersComponent from '@/views/players/ThePlayersComponent.vue'
-// import ThePlayersComponentCopy from '@/views/players/ThePlayersComponentCopy.vue'
 import PlayersComponentBackup from "@/views/players/PlayersComponentBackup.vue"
 
 export default {
   name: 'App',
   components: {
-    // ThePlayersComponent,
-    // ThePlayersComponentCopy
     PlayersComponentBackup
   }
 }

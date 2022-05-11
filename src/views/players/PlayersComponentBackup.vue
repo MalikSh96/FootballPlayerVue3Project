@@ -86,14 +86,15 @@ export default {
 			page: 1,
       pagesTotal: null,
       perPage: 20,
-      testPages: [1,2,3,4,5],
-      newPlayers: [],
       prevPlayers: this.jugadores,
       limit: 20,
     }
   }, 
   methods: {
     async loadJugadores(cP, cL) {
+      //fetch is async and returns a promise
+      //then() fires a callback function after the fetch is done
+      //response.json is also async and returns a promise
       await fetch(`https://futdb.app/api/players?page=${cP}&limit=${cL}`, {
         method: "GET",
         headers: {
@@ -103,20 +104,6 @@ export default {
       })
       .then((response) => response.json())
       .then(data => (this.jugadores.ballers = data, this.pagesTotal = data.page_total))
-      .catch(err => console.log(err.message))
-      console.log('AFTER FETCH PAGES TOTAL', this.pagesTotal)
-    },
-    async getPlayers(page, per) {
-      console.log('PARENT BEFORE FETCH GET PLAYERS ' + page)
-      await fetch(`https://futdb.app/api/players?page=${page}&limit=${per}`, {
-        method: "GET",
-        headers: {
-          'content-type': 'application/json',
-          'X-AUTH-TOKEN': process.env.VUE_APP_FUT_API_KEY 
-        }
-      })
-      .then((response) => response.json())
-      .then(data => (this.newPlayers = data))
       .catch(err => console.log(err.message))
     },
   },
@@ -138,30 +125,20 @@ export default {
     }
   },
 	watch: { //watch triggers a function whenever a reactive property changes
-    page(newPage, oldPage) {
-      console.log('PARENT new page', newPage)
-      console.log('PARENT old page', oldPage)
-    },
     perPage(newValue) {
       localStorage.perPage = newValue;
     },
-    prevPlayers() {
-      console.log('PARENT inside prev players watch', this.prevPlayers.items)
-    },
 	},
 	async created(){
+    //To get the data at a "popular" point is to get it inside either the created or mounted lifecycle hook
+    //A vue component have lifecycle hooks which fires at different points of their lifecycle
+    //The created lifecycle hook is called synchronously after the data has been created
     if(localStorage.perPage) {
-      console.log('PARENT LOCALSTORAGE PERPAGE', localStorage.perPage)
       this.perPage = localStorage.perPage
     }
     this.loadJugadores(1, this.perPage)
     this.prevPlayers = this.jugadores
-    console.log('PARENT created', this.prevPlayers)
 	},
-  async beforeUpdate(){
-    console.log('TEST WHEN LIMIT VALUE IS CHANGED', this.perPage)
-    console.log('PARENT BEFORE UPDATE CALLED', this.prevPlayers)
-  }
 }
 </script>
 

@@ -87,7 +87,6 @@ export default {
                 })
             }
             if (sortKey) { 
-                console.log('FILTERED ACCESSED NOW', data)
                 data = data.slice().sort((a, b) => {
                     a = a[sortKey]
                     b = b[sortKey]
@@ -98,13 +97,8 @@ export default {
         }
     },
     watch: {
-        // rows() {
-        //     console.log('CHILD new data check?', this.rows)
-        // },
         playersData: async function() {
-            console.log('PLAYERS WATCH', this.playersData)
             if(this.playersData) {
-                // console.log('CHILD WATCH playersData CHECK', this.playersData)
                 let id, name, age, club
                 for(let data of this.playersData) {
                     id = data.id
@@ -112,7 +106,6 @@ export default {
                     age = data.age
                     await this.getClub(data.club)
                     club = this.club
-                    // console.log('WHAT IS CLUB', club)
                     this.rows.push({id, name, age, club})
                 }
             }
@@ -136,7 +129,7 @@ export default {
                 }
             })
             .then((response) => response.json())
-            .then(data => (this.club = data.item.name/*, console.log('clubs', this.club)*/))
+            .then(data => (this.club = data.item.name))
             .catch(err => console.log(err.message))
         },
         openModal(id) {
@@ -151,8 +144,6 @@ export default {
             .then((response) => response.json())
             .then(data => (this.showPlayer = data))
             .catch(err => console.log(err.message))
-                    
-            console.log('after', this.showPlayer) 
         },
         closeModal() {
             this.modalIsVisible = false
@@ -160,7 +151,6 @@ export default {
     },
 }
 </script>
-
 
 <style scoped>
 /* MODAL */
