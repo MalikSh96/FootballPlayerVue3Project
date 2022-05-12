@@ -8,6 +8,16 @@
         </select>
         <input v-model="age" class="border-2 mb-5 rounded h-10 p-2" placeholder="Age" type="number">
     </div>
+    <div class="letters-list">
+        Filter by start letter:
+        <div class="letters-wrap" v-for="letter in letters" :key="letter">
+            <div v-if="isFilteredByLetter(letter)" class="has-data">
+                <input :id="letter" type="radio" :value="letter" v-model="lettersFilter">
+                <label :for="letter">{{ letter }}</label>
+            </div>
+            <div v-else>{{ letter }}</div>
+        </div>
+    </div>
     <div>
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -81,7 +91,8 @@ export default {
             sortOrders: this.columns.reduce((o, key) => ((o[key] = 1), o), {}),
             club: '',
             searchOperator: '',
-            age: ''
+            age: '',
+            lettersFilter: ''
         }
     },
     computed: {
@@ -104,7 +115,20 @@ export default {
                     return (a === b ? 0 : a > b ? 1 : -1) * order
                 })
             }
+            if(this.lettersFilter){
+                console.log('COMPUTED FILTER BY LETTER')
+                return data.filter(this.filterByAge).filter((item)=>{
+                    return item.name.toLowerCase().startsWith(this.lettersFilter.toLowerCase());
+                })
+            } 
             return data.filter(this.filterByAge)
+        },
+        letters() {
+            let letters = []
+            for(let i = "A".charCodeAt(0); i <= "Z".charCodeAt(0); i++) {
+                letters.push(String.fromCharCode([i]))
+            }
+            return letters
         },
     },
     watch: {
@@ -126,7 +150,6 @@ export default {
         sortBy(key) {
             this.sortKey = key
             this.sortOrders[key] = this.sortOrders[key] * -1
-
         },
         capitalize(str) {
             return str.charAt(0).toUpperCase() + str.slice(1)
@@ -143,6 +166,10 @@ export default {
             } else if (this.searchOperator === '=') {
                 return (data.age === this.age)
             }
+        },
+        isFilteredByLetter(letter) {
+            console.log('IS FILTER BY LETTER', letter)
+            return this.rows.some(player => player.name.startsWith(letter))
         },
         async getClub(clubId) {
             await fetch('https://futdb.app/api/clubs/' + clubId, {
@@ -264,5 +291,29 @@ th.active .arrow {
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
   border-top: 4px solid #fff;
+}
+
+.letters-list {
+    text-align: center;
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    }
+
+    .letters-wrap {
+        padding: 0 5px;
+        }
+        .letters-wrap input {
+            display: none;
+        }
+        .letters-wrap label {
+            cursor: pointer;
+            color: #0de358;
+        }
+    
+
+.list-inner {
+    
 }
 </style>
