@@ -1,7 +1,8 @@
 <template>
     <div>
-        Filter by age:
+        <p class="text-white">Filter by age:</p>
         <select class="border-2 mb-5 rounded h-10 p-1" v-model="searchOperator">
+            <option value="" selected>None</option>
             <option value="=">Equals to</option>
             <option value=">">Bigger than</option>
             <option value="<">Lesser than</option>
@@ -9,18 +10,23 @@
         <input v-model="age" class="border-2 mb-5 rounded h-10 p-2" placeholder="Age" type="number">
     </div>
     <div class="letters-list">
-        Filter by start letter:
+        <p class="text-white">Filter by start letter:</p>
         <div class="letters-wrap" v-for="letter in letters" :key="letter">
-            <div v-if="isFilteredByLetter(letter)" class="has-data">
+            <div v-if="isFilteredByLetter(letter)" class="has-data font-normal hover:font-bold">
                 <input :id="letter" type="radio" :value="letter" v-model="lettersFilter">
                 <label :for="letter">{{ letter }}</label>
             </div>
-            <div v-else>{{ letter }}</div>
+            <div v-else class="text-white">{{ letter }}</div>
         </div>
     </div>
     <div>
+        <button @click="rowsResetter()">
+            <p class="font-normal hover:font-bold text-red-600">RESET THE LETTER FILTER</p>
+        </button>
+    </div>
+    <div>
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-[#130065] dark:text-white">
                 <tr>
                     <th v-for="key in columns" :key="key" @click="sortBy(key)" :class="{ active: sortKey == key }" class="px-6 py-3 cursor-pointer">
                         {{ capitalize(key) }}
@@ -33,7 +39,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="entry in filteredData" :key="entry" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <tr v-for="entry in filteredData" :key="entry" class="bg-white border-b dark:bg-black dark:border-[#130065] dark:text-white">
                     <td v-for="key in columns" :key="key" class="px-6 py-3">
                         {{entry[key]}}
                     </td>
@@ -54,10 +60,10 @@
             <div class="modal-overlay" v-if="modalIsVisible" @click="closeModal()"></div>
         </transition>
         <transition name="slide" appear>
-            <div class="modal relative bg-white rounded-lg shadow dark:bg-gray-700" v-if="modalIsVisible">
+            <div class="modal relative bg-white rounded-lg shadow dark:bg-[#130065]" v-if="modalIsVisible">
                 <PlayerModalComponent :showPlayer="showPlayer"/>
-                <button type="button"  class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg 
-                text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" 
+                <button type="button" class="text-white bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg 
+                text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-[#0de358] dark:hover:text-white" 
                 @click="closeModal()"
                 >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -116,7 +122,7 @@ export default {
                 })
             }
             if(this.lettersFilter){
-                console.log('COMPUTED FILTER BY LETTER')
+                // console.log('COMPUTED FILTER BY LETTER')
                 return data.filter(this.filterByAge).filter((item)=>{
                     return item.name.toLowerCase().startsWith(this.lettersFilter.toLowerCase());
                 })
@@ -147,6 +153,9 @@ export default {
         },
     },
     methods: {
+        rowsResetter() {
+            return this.lettersFilter = ''
+        },
         sortBy(key) {
             this.sortKey = key
             this.sortOrders[key] = this.sortOrders[key] * -1
@@ -168,7 +177,7 @@ export default {
             }
         },
         isFilteredByLetter(letter) {
-            console.log('IS FILTER BY LETTER', letter)
+            // console.log('IS FILTER BY LETTER', letter)
             return this.rows.some(player => player.name.startsWith(letter))
         },
         async getClub(clubId) {
