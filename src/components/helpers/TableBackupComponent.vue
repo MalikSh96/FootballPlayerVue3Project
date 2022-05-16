@@ -293,27 +293,28 @@ th.active .arrow {
   border-top: 4px solid #fff;
 }
 
+/* LETTERS */
 .letters-list {
     text-align: center;
     padding: 10px 0;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    }
+}
 
-    .letters-wrap {
-        padding: 0 5px;
-        }
-        .letters-wrap input {
-            display: none;
-        }
-        .letters-wrap label {
-            cursor: pointer;
-            color: #0de358;
-        }
-    
+.letters-wrap {
+    padding: 0 5px;
+}
+.letters-wrap input {
+    display: none;
+}
+.letters-wrap label {
+    cursor: pointer;
+    color: #0de358;
+}
 
 .list-inner {
     
 }
+/* LETTERS */
 </style>

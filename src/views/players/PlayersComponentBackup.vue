@@ -1,5 +1,5 @@
 <template>
-  <html class="dark">
+  <html class="dark bg-neutral-300">
     <h1 class="text-2xl font-bold text-indigo-600">The Players</h1>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
       <label class="pr-2 italic">Row limit</label>
