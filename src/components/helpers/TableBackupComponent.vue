@@ -151,6 +151,10 @@ export default {
                 }
             }
         },
+        sortKey(newKey) {
+            console.log('SORT KEY', newKey)
+            localStorage.sortKey = newKey
+        },
     },
     methods: {
         rowsResetter() {
@@ -209,6 +213,13 @@ export default {
             this.modalIsVisible = false
         },
     },
+    created () {
+        if(localStorage.sortKey) {
+            //sorts ascending only on each page refresh/page change, for some reason
+            this.sortBy(localStorage.sortKey)
+        }
+        console.log('CREATED SORT KEY', this.sortOrders[this.sortKey])
+    }
 }
 </script>
 

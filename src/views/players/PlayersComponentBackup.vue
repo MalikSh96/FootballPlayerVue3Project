@@ -25,7 +25,7 @@
             <li class="page-item">
                 <button type="button" 
                 class="flex items-center justify-center w-10 h-10 text-[#0de358] 
-                transition-colors duration-150 rounded-full focus:shadow-outline hover:bg-indigo-100 hover:font-bold" 
+                transition-colors duration-150 rounded-full focus:shadow-outline hover:bg-white hover:font-bold" 
                 v-if="page != 1" @click="page--; loadJugadores(page, perPage)"
                 > 
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
@@ -37,7 +37,7 @@
             </li>
             <li class="page-item">
                 <button type="button" class="w-10 h-10 text-[#0de358] transition-colors duration-150 
-                rounded-full focus:shadow-outline hover:bg-indigo-100 hover:font-bold" 
+                rounded-full focus:shadow-outline hover:bg-white hover:font-bold" 
                 v-for="(pageNumber, key) in setPages" :key="key" 
                 @click="page = pageNumber; loadJugadores(page, perPage);"> {{ pageNumber }} 
                 </button>
@@ -45,7 +45,7 @@
             <li class="page-item">
                 <button type="button" @click="page++; loadJugadores(page, perPage);" v-if="page < pagesTotal" class="flex items-center 
                 justify-center w-10 h-10 text-[#0de358] 
-                transition-colors duration-150 rounded-full focus:shadow-outline hover:bg-indigo-100 hover:font-bold"
+                transition-colors duration-150 rounded-full focus:shadow-outline hover:bg-white hover:font-bold"
                 >
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
                     <path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 
