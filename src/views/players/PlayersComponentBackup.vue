@@ -1,14 +1,18 @@
 <template>
-  <html class="dark">
-    <h1 class="text-2xl font-bold text-indigo-600">The Players</h1>
+  <html class="dark bg-black">
+    <h1 class="text-2xl font-bold text-[#0de358]">The Players</h1>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <label class="pr-2 italic">Row limit</label>
+      <label class="pr-3 text-white">Row limit</label>
       <select v-model="perPage" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 shadow-sm
                                     border-black-100 placeholder-blueGray-300 text-black bg-white rounded text-sm shadow
                                     focus:outline-none focus:ring-indigo-600 ease-linear transition-all duration-150">
         <option v-for="index in setLimitRange" :key="index"> {{ index }}</option>
       </select>
-      <h1>page is? {{page}} || limit is? {{limit}}</h1>
+
+      <div class="text-white py-5">
+        <p>Current page: {{ page }}</p>
+        <p>Total pages: {{ pagesTotal }}</p>
+      </div>
 
       <form id="search">
         <input name="query" v-model="searchQuery" class="border-2 mb-5 rounded h-10 p-2" placeholder="Search records">
@@ -20,8 +24,8 @@
         <ul class="inline-flex space-x-2">
             <li class="page-item">
                 <button type="button" 
-                class="flex items-center justify-center w-10 h-10 text-indigo-600 
-                transition-colors duration-150 rounded-full focus:shadow-outline hover:bg-indigo-100" 
+                class="flex items-center justify-center w-10 h-10 text-[#0de358] 
+                transition-colors duration-150 rounded-full focus:shadow-outline hover:bg-white hover:font-bold" 
                 v-if="page != 1" @click="page--; loadJugadores(page, perPage)"
                 > 
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
@@ -32,15 +36,16 @@
                 </button>
             </li>
             <li class="page-item">
-                <button type="button" class="w-10 h-10 text-indigo-600 transition-colors duration-150 
-                rounded-full focus:shadow-outline hover:bg-indigo-100" 
+                <button type="button" class="w-10 h-10 text-[#0de358] transition-colors duration-150 
+                rounded-full focus:shadow-outline hover:bg-white hover:font-bold" 
                 v-for="(pageNumber, key) in setPages" :key="key" 
                 @click="page = pageNumber; loadJugadores(page, perPage);"> {{ pageNumber }} 
                 </button>
             </li>
             <li class="page-item">
-                <button type="button" @click="page++; loadJugadores(page, perPage);" v-if="page < pagesTotal" class="flex items-center justify-center w-10 h-10 text-indigo-600 
-                transition-colors duration-150 bg-white rounded-full focus:shadow-outline hover:bg-indigo-100"
+                <button type="button" @click="page++; loadJugadores(page, perPage);" v-if="page < pagesTotal" class="flex items-center 
+                justify-center w-10 h-10 text-[#0de358] 
+                transition-colors duration-150 rounded-full focus:shadow-outline hover:bg-white hover:font-bold"
                 >
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
                     <path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 
@@ -49,8 +54,8 @@
                 </svg>
                 </button>
             </li>
-          <p class="py-2 italic">Current page: {{ page }}</p>
-          <p class="py-2 italic">|| Total pages: {{ pagesTotal }}</p>
+          <!-- <p class="py-2 italic text-white">Current page: {{ page }}</p>
+          <p class="py-2 italic text-white">|| Total pages: {{ pagesTotal }}</p> -->
         </ul>
       </nav>
 

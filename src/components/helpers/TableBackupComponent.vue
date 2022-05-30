@@ -1,7 +1,32 @@
 <template>
     <div>
+        <p class="text-white">Filter by age:</p>
+        <select class="border-2 mb-5 rounded h-10 p-1" v-model="searchOperator">
+            <option value="" selected>None</option>
+            <option value="=">Equals to</option>
+            <option value=">">Bigger than</option>
+            <option value="<">Lesser than</option>
+        </select>
+        <input v-model="age" class="border-2 mb-5 rounded h-10 p-2" placeholder="Age" type="number">
+    </div>
+    <div class="letters-list">
+        <p class="text-white">Filter by start letter:</p>
+        <div class="letters-wrap" v-for="letter in letters" :key="letter">
+            <div v-if="isFilteredByLetter(letter)" class="has-data font-normal hover:font-bold">
+                <input :id="letter" type="radio" :value="letter" v-model="lettersFilter">
+                <label :for="letter">{{ letter }}</label>
+            </div>
+            <div v-else class="text-white">{{ letter }}</div>
+        </div>
+    </div>
+    <div>
+        <button @click="rowsResetter()">
+            <p class="font-normal hover:font-bold text-red-600">RESET THE LETTER FILTER</p>
+        </button>
+    </div>
+    <div>
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-[#130065] dark:text-white">
                 <tr>
                     <th v-for="key in columns" :key="key" @click="sortBy(key)" :class="{ active: sortKey == key }" class="px-6 py-3 cursor-pointer">
                         {{ capitalize(key) }}
@@ -14,7 +39,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="entry in filteredData" :key="entry" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <tr v-for="entry in filteredData" :key="entry" class="bg-white border-b dark:bg-black dark:border-[#130065] dark:text-white">
                     <td v-for="key in columns" :key="key" class="px-6 py-3">
                         {{entry[key]}}
                     </td>
@@ -35,10 +60,10 @@
             <div class="modal-overlay" v-if="modalIsVisible" @click="closeModal()"></div>
         </transition>
         <transition name="slide" appear>
-            <div class="modal relative bg-white rounded-lg shadow dark:bg-gray-700" v-if="modalIsVisible">
+            <div class="modal relative bg-white rounded-lg shadow dark:bg-[#130065]" v-if="modalIsVisible">
                 <PlayerModalComponent :showPlayer="showPlayer"/>
-                <button type="button"  class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg 
-                text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" 
+                <button type="button" class="text-white bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg 
+                text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-[#0de358] dark:hover:text-white" 
                 @click="closeModal()"
                 >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -71,6 +96,9 @@ export default {
             sortKey: '',
             sortOrders: this.columns.reduce((o, key) => ((o[key] = 1), o), {}),
             club: '',
+            searchOperator: '',
+            age: '',
+            lettersFilter: ''
         }
     },
     computed: {
@@ -93,8 +121,21 @@ export default {
                     return (a === b ? 0 : a > b ? 1 : -1) * order
                 })
             }
-            return data
-        }
+            if(this.lettersFilter){
+                // console.log('COMPUTED FILTER BY LETTER')
+                return data.filter(this.filterByAge).filter((item)=>{
+                    return item.name.toLowerCase().startsWith(this.lettersFilter.toLowerCase());
+                })
+            } 
+            return data.filter(this.filterByAge)
+        },
+        letters() {
+            let letters = []
+            for(let i = "A".charCodeAt(0); i <= "Z".charCodeAt(0); i++) {
+                letters.push(String.fromCharCode([i]))
+            }
+            return letters
+        },
     },
     watch: {
         playersData: async function() {
@@ -110,14 +151,38 @@ export default {
                 }
             }
         },
+        sortKey(newKey) {
+            console.log('SORT KEY', newKey)
+            localStorage.sortKey = newKey
+        },
     },
     methods: {
+        rowsResetter() {
+            return this.lettersFilter = ''
+        },
         sortBy(key) {
             this.sortKey = key
             this.sortOrders[key] = this.sortOrders[key] * -1
         },
         capitalize(str) {
             return str.charAt(0).toUpperCase() + str.slice(1)
+        },
+        filterByAge(data) {
+            // no operator selected or no age typed, don't filter : 
+            if (this.searchOperator.length === 0 || this.age.length === 0) {
+                return true;
+            }
+            if (this.searchOperator === '>') {
+                return (data.age > this.age); 
+            } else  if (this.searchOperator === '<') {
+                return (data.age < this.age);
+            } else if (this.searchOperator === '=') {
+                return (data.age === this.age)
+            }
+        },
+        isFilteredByLetter(letter) {
+            // console.log('IS FILTER BY LETTER', letter)
+            return this.rows.some(player => player.name.startsWith(letter))
         },
         async getClub(clubId) {
             await fetch('https://futdb.app/api/clubs/' + clubId, {
@@ -148,6 +213,13 @@ export default {
             this.modalIsVisible = false
         },
     },
+    created () {
+        if(localStorage.sortKey) {
+            //sorts ascending only on each page refresh/page change, for some reason
+            this.sortBy(localStorage.sortKey)
+        }
+        console.log('CREATED SORT KEY', this.sortOrders[this.sortKey])
+    }
 }
 </script>
 
@@ -240,4 +312,29 @@ th.active .arrow {
   border-right: 4px solid transparent;
   border-top: 4px solid #fff;
 }
+
+/* LETTERS */
+.letters-list {
+    text-align: center;
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.letters-wrap {
+    padding: 0 5px;
+}
+.letters-wrap input {
+    display: none;
+}
+.letters-wrap label {
+    cursor: pointer;
+    color: #0de358;
+}
+
+.list-inner {
+    
+}
+/* LETTERS */
 </style>
