@@ -12,7 +12,7 @@
 
       <section class="modal-body">
         <slot name="body">
-          Filter by player age
+          <p class="font-bold text-left">Filter by player age:</p>
         </slot>
         <!--TODO: HAVE FILTER METHOD DO ITS JOB HERE-->
         <div>
@@ -28,7 +28,8 @@
                 class="border-2 mb-5 rounded h-10 p-2" placeholder="Age" type="number">
         </div>
         <slot name="body">
-          Filter by player name
+          <p class="font-bold text-left">Filter by player name:</p>
+          TBD
         </slot>
         <!-- <div class="letters-list">
             <p class="text-white">Filter by start letter:</p>
