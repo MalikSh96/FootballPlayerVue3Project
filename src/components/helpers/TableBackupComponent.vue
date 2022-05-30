@@ -1,5 +1,15 @@
 <template>
-    <div>
+    <div class="flex justify-end">
+        <button class="btn hover:font-bold dark:text-[#0de358]" type="button" @click="openExtraModal">
+            FILTER BUTTON
+        </button>
+        <modal-component v-show="isExtraModalVisible" 
+        :playerAge="age" @update:playerAge="newValue => age = newValue"
+        :operator="searchOperator" @update:searchOperator="newValue => searchOperator = newValue"
+        @close="closeExtraModal"/>
+    </div>
+    <!--FILTER-->
+    <!-- <div>
         <p class="text-white">Filter by age:</p>
         <select class="border-2 mb-5 rounded h-10 p-1" v-model="searchOperator">
             <option value="" selected>None</option>
@@ -23,7 +33,8 @@
         <button @click="rowsResetter()">
             <p class="font-normal hover:font-bold text-red-600">RESET THE LETTER FILTER</p>
         </button>
-    </div>
+    </div> -->
+    <!--FILTER-->
     <div>
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-[#130065] dark:text-white">
@@ -78,10 +89,12 @@
 
 <script>
 import PlayerModalComponent from '@/components/helpers/PlayerModalComponent.vue'
+import ModalComponent from '../ModalComponent.vue'
 
 export default {
     components: {
-        PlayerModalComponent
+        PlayerModalComponent,
+        ModalComponent,
     },
     props: {
         playersData: Object,
@@ -98,7 +111,8 @@ export default {
             club: '',
             searchOperator: '',
             age: '',
-            lettersFilter: ''
+            lettersFilter: '',
+            isExtraModalVisible: false
         }
     },
     computed: {
@@ -212,6 +226,13 @@ export default {
         closeModal() {
             this.modalIsVisible = false
         },
+        openExtraModal() {
+            console.log('EXTRA MODAL')
+            this.isExtraModalVisible = true
+        },
+        closeExtraModal() {
+            this.isExtraModalVisible = false
+        }
     },
     created () {
         if(localStorage.sortKey) {
