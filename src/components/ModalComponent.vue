@@ -26,6 +26,7 @@
           <input :value="playerAge" @input="$emit('update:playerAge', $event.target.value)"
             class="border-2 mb-5 rounded h-10 p-2" placeholder="Age" type="number">
         </div>
+
         <slot name="body">
           <p class="font-bold text-left">Filter by player name:</p>
         </slot>
@@ -46,10 +47,10 @@
         </div>
 
         <slot name="body">
-          <p class="font-bold text-left">Filter by club name:</p>
+          <p class="font-bold text-left">Filter by club name: NOT WORKING PROPERLY RN</p>
         </slot>
         <div class="letters-list">
-          <div class="letters-wrap" v-for="club in clubLetters" :key="club">
+          <div class="letters-wrap" v-for="club in letters" :key="club">
             <div v-if="isClubFilteredByLetter(club)" class="has-data font-normal hover:font-bold">
               <input :id="club" type="radio" :value="club" 
                 @input="$emit('update:clubFilter', $event.target.value)">
@@ -96,13 +97,13 @@
         }
         return letters
       },
-      clubLetters() {
-        let letters = []
-        for(let i = "A".charCodeAt(0); i <= "Z".charCodeAt(0); i++) {
-          letters.push(String.fromCharCode([i]))
-        }
-        return letters
-      },
+      // clubLetters() {
+      //   let letters = []
+      //   for(let i = "A".charCodeAt(0); i <= "Z".charCodeAt(0); i++) {
+      //     letters.push(String.fromCharCode([i]))
+      //   }
+      //   return letters
+      // },
     },
     watch: {
       lets(value) {

@@ -120,7 +120,7 @@ export default {
                     return item.name.toLowerCase().startsWith(this.lettersFilter.toLowerCase());
                 })
             } 
-            if(this.clubLetterFilter){
+            else if(this.clubLetterFilter){
                 return data.filter(this.filterByAge).filter((item)=>{
                     return item.club.toLowerCase().startsWith(this.clubLetterFilter.toLowerCase());
                 })
