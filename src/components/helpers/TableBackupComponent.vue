@@ -9,7 +9,8 @@
         :playerAge="age" @update:playerAge="newValue => age = newValue"
         :operator="searchOperator" @update:operator="newValue => searchOperator = newValue"
         @close="closeExtraModal" :rows="rows" 
-        :lets="lettersFilter" @update:lets="newValue => lettersFilter = newValue"/>
+        :lets="lettersFilter" @update:lets="newValue => lettersFilter = newValue"
+        :clubFilter="clubLetterFilter" @update:clubFilter="newValue => clubLetterFilter = newValue"/>
     </div>
 
     <div>
@@ -89,6 +90,7 @@ export default {
             searchOperator: '',
             age: '',
             lettersFilter: '',
+            clubLetterFilter: '',
             isExtraModalVisible: false
         }
     },
@@ -118,15 +120,20 @@ export default {
                     return item.name.toLowerCase().startsWith(this.lettersFilter.toLowerCase());
                 })
             } 
+            if(this.clubLetterFilter){
+                return data.filter(this.filterByAge).filter((item)=>{
+                    return item.club.toLowerCase().startsWith(this.clubLetterFilter.toLowerCase());
+                })
+            } 
             return data.filter(this.filterByAge)
         },
-        letters() {
-            let letters = []
-            for(let i = "A".charCodeAt(0); i <= "Z".charCodeAt(0); i++) {
-                letters.push(String.fromCharCode([i]))
-            }
-            return letters
-        },
+        // letters() {
+        //     let letters = []
+        //     for(let i = "A".charCodeAt(0); i <= "Z".charCodeAt(0); i++) {
+        //         letters.push(String.fromCharCode([i]))
+        //     }
+        //     return letters
+        // },
     },
     watch: {
         playersData: async function() {

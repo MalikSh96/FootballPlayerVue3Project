@@ -41,7 +41,26 @@
         </div>
         <div>
           <button @click="rowsResetter()">
-            <p class="font-normal hover:font-bold text-red-600">RESET THE LETTER FILTER</p>
+            <p class="font-normal hover:font-bold text-red-600">RESET THE NAME FILTER</p>
+          </button>
+        </div>
+
+        <slot name="body">
+          <p class="font-bold text-left">Filter by club name:</p>
+        </slot>
+        <div class="letters-list">
+          <div class="letters-wrap" v-for="club in clubLetters" :key="club">
+            <div v-if="isClubFilteredByLetter(club)" class="has-data font-normal hover:font-bold">
+              <input :id="club" type="radio" :value="club" 
+                @input="$emit('update:clubFilter', $event.target.value)">
+              <label :for="club">{{ club }}</label>
+            </div>
+            <div v-else class="">{{ club }}</div>
+          </div>
+        </div>
+        <div>
+          <button @click="clubRowsResetter()">
+            <p class="font-normal hover:font-bold text-red-600">RESET THE CLUB FILTER</p>
           </button>
         </div>
        </section>
@@ -61,15 +80,23 @@
         operator: String,
         rows: Array,
         lets: String,
+        clubFilter: String
     },
     data() {
       return {
-        lettersHandle: ''
+        // lettersHandle: ''
       }
     },
-    emits: ['update:playerAge', 'update:operator', 'update:lets'],
+    emits: ['update:playerAge', 'update:operator', 'update:lets', 'update:clubFilter'],
     computed: {
       letters() {
+        let letters = []
+        for(let i = "A".charCodeAt(0); i <= "Z".charCodeAt(0); i++) {
+          letters.push(String.fromCharCode([i]))
+        }
+        return letters
+      },
+      clubLetters() {
         let letters = []
         for(let i = "A".charCodeAt(0); i <= "Z".charCodeAt(0); i++) {
           letters.push(String.fromCharCode([i]))
@@ -81,15 +108,26 @@
       lets(value) {
         console.log('what is lets', this.lets)
         console.log('test', value)
-        this.lettersHandle = value
+        // this.lettersHandle = value
+      },
+      clubFilter(value) {
+        console.log('what is club filter', this.lets)
+        console.log('test', value)
+        // this.lettersHandle = value
       },
     },
     methods: {
       rowsResetter() {
         this.$emit('update:lets')
       },
+      clubRowsResetter() {
+        this.$emit('update:clubFilter')
+      },
       isFilteredByLetter(letter) {
         return this.rows.some(player => player.name.startsWith(letter))
+      },
+      isClubFilteredByLetter(letter) {
+        return this.rows.some(player => player.club.startsWith(letter))
       },
       close() {
         this.$emit('close');
