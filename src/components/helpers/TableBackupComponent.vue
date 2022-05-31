@@ -1,12 +1,15 @@
 <template>
-    <div class="flex justify-end">
+    <div>
         <button class="btn hover:font-bold dark:text-[#0de358]" type="button" @click="openExtraModal">
-            FILTER BUTTON
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+            </svg>
         </button>
         <modal-component v-show="isExtraModalVisible" 
         :playerAge="age" @update:playerAge="newValue => age = newValue"
-        :operator="searchOperator" @update:searchOperator="newValue => searchOperator = newValue"
-        @close="closeExtraModal"/>
+        :operator="searchOperator" @update:operator="newValue => searchOperator = newValue"
+        @close="closeExtraModal" :rows="rows" 
+        :lets="lettersFilter" @update:lets="newValue => lettersFilter = newValue"/>
     </div>
     <!--FILTER-->
     <!-- <div>
@@ -18,8 +21,8 @@
             <option value="<">Lesser than</option>
         </select>
         <input v-model="age" class="border-2 mb-5 rounded h-10 p-2" placeholder="Age" type="number">
-    </div>
-    <div class="letters-list">
+    </div>-->
+    <!--<div class="letters-list">
         <p class="text-white">Filter by start letter:</p>
         <div class="letters-wrap" v-for="letter in letters" :key="letter">
             <div v-if="isFilteredByLetter(letter)" class="has-data font-normal hover:font-bold">
@@ -28,12 +31,12 @@
             </div>
             <div v-else class="text-white">{{ letter }}</div>
         </div>
-    </div>
+    </div>-->
     <div>
         <button @click="rowsResetter()">
             <p class="font-normal hover:font-bold text-red-600">RESET THE LETTER FILTER</p>
         </button>
-    </div> -->
+    </div> 
     <!--FILTER-->
     <div>
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">

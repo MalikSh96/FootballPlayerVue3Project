@@ -14,52 +14,43 @@
         <slot name="body">
           <p class="font-bold text-left">Filter by player age:</p>
         </slot>
-        <!--TODO: HAVE FILTER METHOD DO ITS JOB HERE-->
         <div>
-            <p class="text-white">Filter by age:</p>
-            <select class="border-2 mb-5 rounded h-10 p-1" 
-                    @input="$emit('update:searchOperator', $event.target.value)">
-                <option value="" selected>None</option>
-                <option value="=">Equals to</option> <!-- THIS OPTION IS NOT WORKING RN-->
-                <option value=">">Bigger than</option>
-                <option value="<">Lesser than</option>
-            </select>
-            <input :value="playerAge" @input="$emit('update:playerAge', $event.target.value)"
-                class="border-2 mb-5 rounded h-10 p-2" placeholder="Age" type="number">
+          <p class="text-white">Filter by age:</p>
+          <select class="border-2 mb-5 rounded h-10 p-1" 
+              @input="$emit('update:operator', $event.target.value)">
+            <option value="" selected>None</option>
+            <option value="=">Equals to</option> <!-- THIS OPTION IS NOT WORKING RN-->
+            <option value=">">Bigger than</option>
+            <option value="<">Lesser than</option>
+          </select>
+          <input :value="playerAge" @input="$emit('update:playerAge', $event.target.value)"
+            class="border-2 mb-5 rounded h-10 p-2" placeholder="Age" type="number">
         </div>
         <slot name="body">
           <p class="font-bold text-left">Filter by player name:</p>
-          TBD
         </slot>
-        <!-- <div class="letters-list">
-            <p class="text-white">Filter by start letter:</p>
-            <div class="letters-wrap" v-for="letter in letters" :key="letter">
-                <div v-if="isFilteredByLetter(letter)" class="has-data font-normal hover:font-bold">
-                    <input :id="letter" type="radio" :value="letter" v-model="lettersFilter">
-                    <label :for="letter">{{ letter }}</label>
-                </div>
-                <div v-else class="text-white">{{ letter }}</div>
+        <div class="letters-list">
+          <div class="letters-wrap" v-for="letter in letters" :key="letter">
+            <div v-if="isFilteredByLetter(letter)" class="has-data font-normal hover:font-bold">
+              <input :id="letter" type="radio" :value="letter" 
+                @input="$emit('update:lets', $event.target.value)">
+              <label :for="letter">{{ letter }}</label>
             </div>
+            <div v-else class="">{{ letter }}</div>
+          </div>
         </div>
         <div>
-            <button @click="rowsResetter()">
-                <p class="font-normal hover:font-bold text-red-600">RESET THE LETTER FILTER</p>
-            </button>
-        </div> -->
+          <button @click="rowsResetter()">
+            <p class="font-normal hover:font-bold text-red-600">RESET THE LETTER FILTER</p>
+          </button>
+        </div>
        </section>
 
-      <!-- <footer class="modal-footer">
-        <slot name="footer">
-          This is the default footer!
-        </slot>
-        <button
-          type="button"
-          class="btn-green"
-          @click="close"
-        >
-          Close Modal
+      <footer class="modal-footer">
+        <button type="button" class="btn-green" @click="close">
+          Close
         </button>
-      </footer> -->
+      </footer>
     </div>
   </div>
 </template>
@@ -67,10 +58,45 @@
   export default {
     props: {
         playerAge: String,
-        searchOperator: String
+        operator: String,
+        rows: Array,
+        lets: String,
     },
-    emits: ['update:playerAge', 'update:searchOperator'],
+    data() {
+      return {
+        lettersHandle: ''
+      }
+    },
+    emits: ['update:playerAge', 'update:operator', 'update:lets'],
+    computed: {
+      letters() {
+        let letters = []
+        for(let i = "A".charCodeAt(0); i <= "Z".charCodeAt(0); i++) {
+          letters.push(String.fromCharCode([i]))
+        }
+        return letters
+      },
+    },
+    watch: {
+      lets(value) {
+        console.log('what is lets', this.lets)
+        console.log('test', value)
+        this.lettersHandle = value
+      },
+      // lettersHandle(value) {
+      //   console.log('value checker', value)
+      //   console.log('letters handle', this.lettersHandle)
+      // }
+    },
     methods: {
+      rowsResetter() {
+        console.log('RESET', this.lettersHandle)
+        return this.lettersHandle = ''
+      },
+      isFilteredByLetter(letter) {
+        // console.log('FILTERED BY LETTER', letter)
+        return this.rows.some(player => player.name.startsWith(letter))
+      },
       close() {
         this.$emit('close');
       },
