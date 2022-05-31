@@ -11,33 +11,7 @@
         @close="closeExtraModal" :rows="rows" 
         :lets="lettersFilter" @update:lets="newValue => lettersFilter = newValue"/>
     </div>
-    <!--FILTER-->
-    <!-- <div>
-        <p class="text-white">Filter by age:</p>
-        <select class="border-2 mb-5 rounded h-10 p-1" v-model="searchOperator">
-            <option value="" selected>None</option>
-            <option value="=">Equals to</option>
-            <option value=">">Bigger than</option>
-            <option value="<">Lesser than</option>
-        </select>
-        <input v-model="age" class="border-2 mb-5 rounded h-10 p-2" placeholder="Age" type="number">
-    </div>-->
-    <!--<div class="letters-list">
-        <p class="text-white">Filter by start letter:</p>
-        <div class="letters-wrap" v-for="letter in letters" :key="letter">
-            <div v-if="isFilteredByLetter(letter)" class="has-data font-normal hover:font-bold">
-                <input :id="letter" type="radio" :value="letter" v-model="lettersFilter">
-                <label :for="letter">{{ letter }}</label>
-            </div>
-            <div v-else class="text-white">{{ letter }}</div>
-        </div>
-    </div>-->
-    <div>
-        <button @click="rowsResetter()">
-            <p class="font-normal hover:font-bold text-red-600">RESET THE LETTER FILTER</p>
-        </button>
-    </div> 
-    <!--FILTER-->
+
     <div>
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-[#130065] dark:text-white">
@@ -174,9 +148,6 @@ export default {
         },
     },
     methods: {
-        rowsResetter() {
-            return this.lettersFilter = ''
-        },
         sortBy(key) {
             this.sortKey = key
             this.sortOrders[key] = this.sortOrders[key] * -1
@@ -196,10 +167,6 @@ export default {
             } else if (this.searchOperator === '=') {
                 return (data.age === this.age)
             }
-        },
-        isFilteredByLetter(letter) {
-            // console.log('IS FILTER BY LETTER', letter)
-            return this.rows.some(player => player.name.startsWith(letter))
         },
         async getClub(clubId) {
             await fetch('https://futdb.app/api/clubs/' + clubId, {
@@ -336,29 +303,4 @@ th.active .arrow {
   border-right: 4px solid transparent;
   border-top: 4px solid #fff;
 }
-
-/* LETTERS */
-.letters-list {
-    text-align: center;
-    padding: 10px 0;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.letters-wrap {
-    padding: 0 5px;
-}
-.letters-wrap input {
-    display: none;
-}
-.letters-wrap label {
-    cursor: pointer;
-    color: #0de358;
-}
-
-.list-inner {
-    
-}
-/* LETTERS */
 </style>

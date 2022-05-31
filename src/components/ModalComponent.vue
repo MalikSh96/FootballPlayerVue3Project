@@ -83,18 +83,12 @@
         console.log('test', value)
         this.lettersHandle = value
       },
-      // lettersHandle(value) {
-      //   console.log('value checker', value)
-      //   console.log('letters handle', this.lettersHandle)
-      // }
     },
     methods: {
       rowsResetter() {
-        console.log('RESET', this.lettersHandle)
-        return this.lettersHandle = ''
+        this.$emit('update:lets')
       },
       isFilteredByLetter(letter) {
-        // console.log('FILTERED BY LETTER', letter)
         return this.rows.some(player => player.name.startsWith(letter))
       },
       close() {
