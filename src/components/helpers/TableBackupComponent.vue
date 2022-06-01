@@ -8,8 +8,8 @@
         <modal-component v-show="isExtraModalVisible" @close="closeExtraModal" :rows="rows" 
             :playerAge="age" @update:playerAge="newValue => age = newValue"
             :operator="searchOperator" @update:operator="newValue => searchOperator = newValue"
-            :lets="lettersFilter" @update:lets="newValue => lettersFilter = newValue"
-            :clubFilter="clubLetterFilter" @update:clubFilter="newValue => clubLetterFilter = newValue"
+            :nameFiltering="nameFilter" @update:nameFiltering="newValue => nameFilter = newValue"
+            :clubFiltering="clubFilter" @update:clubFiltering="newValue => clubFilter = newValue"
         />
     </div>
 
@@ -82,16 +82,16 @@ export default {
     data() {
         return {
             modalIsVisible: false,
+            isExtraModalVisible: false,
             showPlayer: {},
             rows: [],
             sortKey: '',
             sortOrders: this.columns.reduce((o, key) => ((o[key] = 1), o), {}),
-            club: '',
             searchOperator: '',
+            club: '',
             age: '',
-            lettersFilter: '',
-            clubLetterFilter: '',
-            isExtraModalVisible: false
+            nameFilter: '',
+            clubFilter: '', 
         }
     },
     computed: {
@@ -114,28 +114,19 @@ export default {
                     return (a === b ? 0 : a > b ? 1 : -1) * order
                 })
             }
-            if(this.lettersFilter){
+            if(this.nameFilter){
                 // console.log('COMPUTED FILTER BY LETTER')
                 return data.filter(this.filterByAge).filter((item)=>{
-                    console.log('filter name', item.name)
-                    return item.name.toLowerCase().startsWith(this.lettersFilter.toLowerCase());
+                    return item.name.toLowerCase().startsWith(this.nameFilter.toLowerCase());
                 })
             } 
-            else if(this.clubLetterFilter){
+            if(this.clubFilter){
                 return data.filter(this.filterByAge).filter((item)=>{
-                    console.log('filter club', item.club)
-                    return item.club.toLowerCase().startsWith(this.clubLetterFilter.toLowerCase());
+                    return item.club.toLowerCase().startsWith(this.clubFilter.toLowerCase());
                 })
             } 
             return data.filter(this.filterByAge)
         },
-        // letters() {
-        //     let letters = []
-        //     for(let i = "A".charCodeAt(0); i <= "Z".charCodeAt(0); i++) {
-        //         letters.push(String.fromCharCode([i]))
-        //     }
-        //     return letters
-        // },
     },
     watch: {
         playersData: async function() {

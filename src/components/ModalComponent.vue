@@ -3,7 +3,7 @@
     <div class="modal">
       <header class="modal-header">
         <slot name="header">
-          <p class="font-bold">FILTER THE PLAYERS TABLE</p>
+          <p class="font-bold text-white">FILTER THE PLAYERS TABLE</p>
         </slot>
         <button type="button" class="btn-close" @click="close">
           x
@@ -12,7 +12,7 @@
 
       <section class="modal-body">
         <slot name="body">
-          <p class="font-bold text-left">Filter by player age:</p>
+          <p class="font-bold text-left text-white">Filter by player age:</p>
         </slot>
         <div>
           <p class="text-white">Filter by age:</p>
@@ -28,13 +28,13 @@
         </div>
 
         <slot name="body">
-          <p class="font-bold text-left">Filter by player name:</p>
+          <p class="font-bold text-left text-white">Filter by player name:</p>
         </slot>
         <div class="letters-list">
           <div class="letters-wrap" v-for="letter in letters" :key="letter">
             <div v-if="isFilteredByLetter(letter)" class="has-data font-normal hover:font-bold">
               <input :id="letter" type="radio" :value="letter" v-model="lettersHandle"
-                @input="$emit('update:lets', $event.target.value)">
+                @input="$emit('update:nameFiltering', $event.target.value)">
               <label :for="letter">{{ letter }}</label>
             </div>
             <div v-else class="">{{ letter }}</div>
@@ -42,18 +42,18 @@
         </div>
         <div>
           <button @click="rowsResetter()">
-            <p class="font-normal hover:font-bold text-red-600">RESET THE NAME FILTER</p>
+            <p class="font-normal hover:font-bold text-white">RESET THE NAME FILTER</p>
           </button>
         </div>
 
         <slot name="body">
-          <p class="font-bold text-left">Filter by club name: NOT WORKING PROPERLY RN</p>
+          <p class="font-bold text-left text-white">Filter by club name: NOT WORKING PROPERLY RN</p>
         </slot>
         <div class="letters-list">
           <div class="letters-wrap" v-for="club in letters" :key="club">
             <div v-if="isClubFilteredByLetter(club)" class="has-data font-normal hover:font-bold">
               <input :id="club" type="radio" :value="club" v-model="clubLetterHandle"
-                @input="$emit('update:clubFilter', $event.target.value)">
+                @input="$emit('update:clubFiltering', $event.target.value)">
               <label :for="club">{{ club }}</label>
             </div>
             <div v-else class="">{{ club }}</div>
@@ -61,7 +61,7 @@
         </div>
         <div>
           <button @click="clubRowsResetter()">
-            <p class="font-normal hover:font-bold text-red-600">RESET THE CLUB FILTER</p>
+            <p class="font-normal hover:font-bold text-white">RESET THE CLUB FILTER</p>
           </button>
         </div>
        </section>
@@ -80,8 +80,8 @@
         playerAge: String,
         operator: String,
         rows: Array,
-        lets: String,
-        clubFilter: String
+        nameFiltering: String,
+        clubFiltering: String
     },
     data() {
       return {
@@ -89,7 +89,7 @@
         clubLetterHandle: '',
       }
     },
-    emits: ['update:playerAge', 'update:operator', 'update:lets', 'update:clubFilter', 'close'],
+    emits: ['update:playerAge', 'update:operator', 'update:nameFiltering', 'update:clubFiltering', 'close'],
     computed: {
       letters() {
         let letters = []
@@ -100,25 +100,25 @@
       },
     },
     watch: {
-      lets(value) {
-        console.log('what is lets', this.lets)
-        console.log('lets value', value)
+      nameFiltering(value) {
+        console.log('what is nameFiltering', this.nameFiltering)
+        console.log('nameFiltering value', value)
         this.lettersHandle = value
       },
-      clubFilter(value) {
-        console.log('what is club filter', this.clubFilter)
-        console.log('clubfilter value', value)
+      clubFiltering(value) {
+        console.log('what is club filter', this.clubFiltering)
+        console.log('clubFiltering value', value)
         this.clubLetterHandle = value
       },
     },
     methods: {
       rowsResetter() {
         // this.lettersHandle = '';
-        this.$emit('update:lets')
+        this.$emit('update:nameFiltering')
       },
       clubRowsResetter() {
         // this.clubLetterHandle = '';
-        this.$emit('update:clubFilter')
+        this.$emit('update:clubFiltering')
       },
       isFilteredByLetter(letter) {
         return this.rows.some(player => player.name.startsWith(letter))
@@ -147,7 +147,7 @@
   }
 
   .modal {
-    background: #FFFFFF;
+    background: #FB667A;
     box-shadow: 2px 2px 20px 1px;
     overflow-x: auto;
     display: flex;
@@ -162,13 +162,13 @@
 
   .modal-header {
     position: relative;
-    border-bottom: 1px solid #eeeeee;
-    color: #4AAE9B;
+    border-bottom: 1px solid #39A0ED;
+    color: white;
     justify-content: space-between;
   }
 
   .modal-footer {
-    border-top: 1px solid #eeeeee;
+    border-top: 1px solid #39A0ED;
     flex-direction: column;
     justify-content: flex-end;
   }
@@ -187,14 +187,14 @@
     padding: 10px;
     cursor: pointer;
     font-weight: bold;
-    color: #4AAE9B;
+    color: white;
     background: transparent;
   }
 
   .btn-green {
     color: white;
-    background: #4AAE9B;
-    border: 1px solid #4AAE9B;
+    background: #39A0ED;
+    border: 1px solid #39A0ED;
     border-radius: 2px;
   }
 
@@ -215,7 +215,7 @@
 }
 .letters-wrap label {
     cursor: pointer;
-    color: #0de358;
+    color: white;
 }
 
 .list-inner {
