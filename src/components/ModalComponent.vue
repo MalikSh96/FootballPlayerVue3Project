@@ -12,7 +12,7 @@
 
       <section class="modal-body">
         <slot name="body">
-          <p class="font-bold text-left text-white">Filter by player age:</p>
+          <p class="font-bold text-left text-white">Filter by players age:</p>
         </slot>
         <div>
           <p class="text-white">Filter by age:</p>
@@ -67,7 +67,7 @@
        </section>
 
       <footer class="modal-footer">
-        <button type="button" class="btn-green" @click="close">
+        <button type="button" class="btn-green hover:bg-[#1F2739]" @click="close">
           Close
         </button>
       </footer>
@@ -91,7 +91,7 @@
     },
     emits: ['update:playerAge', 'update:operator', 'update:nameFiltering', 'update:clubFiltering', 'close'],
     computed: {
-      letters() {
+      letters() { //generates letters from A-Z
         let letters = []
         for(let i = "A".charCodeAt(0); i <= "Z".charCodeAt(0); i++) {
           letters.push(String.fromCharCode([i]))

@@ -1,11 +1,11 @@
 <template>
     <div>
-        <button class="btn hover:font-bold dark:text-[#FB667A]" type="button" @click="openExtraModal">
+        <button class="btn hover:font-bold hover:dark:text-white dark:text-[#FB667A]" type="button" @click="openExtraModal">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
             </svg>
         </button>
-        
+
         <modal-component v-show="isExtraModalVisible" @close="closeExtraModal" :rows="rows" 
             :playerAge="age" @update:playerAge="newValue => age = newValue"
             :operator="searchOperator" @update:operator="newValue => searchOperator = newValue"
@@ -116,8 +116,7 @@ export default {
                 })
             }
             if(this.nameFilter) {
-                // console.log('COMPUTED FILTER BY LETTER')
-                return data.filter(this.filterByAge).filter((item)=> {
+                return data.filter(this.filterByAge).filter((item) => {
                     return item.name.toLowerCase().startsWith(this.nameFilter.toLowerCase());
                 })
             } 
@@ -158,14 +157,14 @@ export default {
         },
         filterByAge(data) {
             // no operator selected or no age typed, don't filter : 
-            if (this.searchOperator.length === 0 || this.age.length === 0) {
+            if(this.searchOperator.length === 0 || this.age.length === 0) {
                 return true;
             }
-            if (this.searchOperator === '>') {
+            if(this.searchOperator === '>') {
                 return (data.age > this.age); 
-            } else  if (this.searchOperator === '<') {
+            } else  if(this.searchOperator === '<') {
                 return (data.age < this.age);
-            } else if (this.searchOperator === '=') {
+            } else if(this.searchOperator === '=') {
                 return (data.age === this.age)
             }
         },
