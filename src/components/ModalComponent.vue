@@ -28,11 +28,11 @@
         </div>
 
         <slot name="body">
-          <p class="font-bold text-left text-white">Filter by player name:</p>
+          <p class="font-bold text-left text-white">Filter by name letter:</p>
         </slot>
         <div class="letters-list">
           <div class="letters-wrap" v-for="letter in letters" :key="letter">
-            <div v-if="isFilteredByLetter(letter)" class="has-data font-normal hover:font-bold">
+            <div v-if="isNameFilteredByLetter(letter)" class="has-data font-normal hover:font-bold">
               <input :id="letter" type="radio" :value="letter" v-model="lettersHandle"
                 @input="$emit('update:nameFiltering', $event.target.value)">
               <label :for="letter">{{ letter }}</label>
@@ -47,16 +47,16 @@
         </div>
 
         <slot name="body">
-          <p class="font-bold text-left text-white">Filter by club name: NOT WORKING PROPERLY RN</p>
+          <p class="font-bold text-left text-white">Filter by club letter:</p>
         </slot>
         <div class="letters-list">
-          <div class="letters-wrap" v-for="club in letters" :key="club">
-            <div v-if="isClubFilteredByLetter(club)" class="has-data font-normal hover:font-bold">
-              <input :id="club" type="radio" :value="club" v-model="clubLetterHandle"
+          <div class="letters-wrap" v-for="letter in letters" :key="letter">
+            <div v-if="isClubFilteredByLetter(letter)" class="has-data font-normal hover:font-bold">
+              <input :id="letter" type="radio" :value="letter" v-model="clubLetterHandle"
                 @input="$emit('update:clubFiltering', $event.target.value)">
-              <label :for="club">{{ club }}</label>
+              <label :for="letter">{{ letter }}</label>
             </div>
-            <div v-else class="">{{ club }}</div>
+            <div v-else class="">{{ letter }}</div>
           </div>
         </div>
         <div>
@@ -101,29 +101,23 @@
     },
     watch: {
       nameFiltering(value) {
-        console.log('what is nameFiltering', this.nameFiltering)
-        console.log('nameFiltering value', value)
         this.lettersHandle = value
       },
       clubFiltering(value) {
-        console.log('what is club filter', this.clubFiltering)
-        console.log('clubFiltering value', value)
         this.clubLetterHandle = value
       },
     },
     methods: {
       rowsResetter() {
-        // this.lettersHandle = '';
         this.$emit('update:nameFiltering')
       },
       clubRowsResetter() {
-        // this.clubLetterHandle = '';
         this.$emit('update:clubFiltering')
       },
-      isFilteredByLetter(letter) {
+      isNameFilteredByLetter(letter) { //highlights letter if exists
         return this.rows.some(player => player.name.startsWith(letter))
       },
-      isClubFilteredByLetter(letter) {
+      isClubFilteredByLetter(letter) { //highlights letter if exists
         return this.rows.some(player => player.club.startsWith(letter))
       },
       close() {

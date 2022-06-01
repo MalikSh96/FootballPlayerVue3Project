@@ -5,6 +5,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
             </svg>
         </button>
+        
         <modal-component v-show="isExtraModalVisible" @close="closeExtraModal" :rows="rows" 
             :playerAge="age" @update:playerAge="newValue => age = newValue"
             :operator="searchOperator" @update:operator="newValue => searchOperator = newValue"
@@ -100,28 +101,28 @@ export default {
             const filterKey = this.filterKey && this.filterKey.toLowerCase()
             const order = this.sortOrders[sortKey] || 1
             let data = this.rows
-            if (filterKey) { 
+            if(filterKey) { 
                 data = data.filter((row) => {
                     return Object.keys(row).some((key) => {
                         return String(row[key]).toLowerCase().indexOf(filterKey) > -1
                     })
                 })
             }
-            if (sortKey) { 
+            if(sortKey) { 
                 data = data.slice().sort((a, b) => {
                     a = a[sortKey]
                     b = b[sortKey]
                     return (a === b ? 0 : a > b ? 1 : -1) * order
                 })
             }
-            if(this.nameFilter){
+            if(this.nameFilter) {
                 // console.log('COMPUTED FILTER BY LETTER')
-                return data.filter(this.filterByAge).filter((item)=>{
+                return data.filter(this.filterByAge).filter((item)=> {
                     return item.name.toLowerCase().startsWith(this.nameFilter.toLowerCase());
                 })
             } 
-            if(this.clubFilter){
-                return data.filter(this.filterByAge).filter((item)=>{
+            if(this.clubFilter) {
+                return data.filter(this.filterByAge).filter((item) => {
                     return item.club.toLowerCase().startsWith(this.clubFilter.toLowerCase());
                 })
             } 
