@@ -1,21 +1,21 @@
 <template>
     <div>
-        <button class="btn hover:font-bold dark:text-[#0de358]" type="button" @click="openExtraModal">
+        <button class="btn hover:font-bold dark:text-[#FB667A]" type="button" @click="openExtraModal">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
             </svg>
         </button>
-        <modal-component v-show="isExtraModalVisible" 
-        :playerAge="age" @update:playerAge="newValue => age = newValue"
-        :operator="searchOperator" @update:operator="newValue => searchOperator = newValue"
-        @close="closeExtraModal" :rows="rows" 
-        :lets="lettersFilter" @update:lets="newValue => lettersFilter = newValue"
-        :clubFilter="clubLetterFilter" @update:clubFilter="newValue => clubLetterFilter = newValue"/>
+        <modal-component v-show="isExtraModalVisible" @close="closeExtraModal" :rows="rows" 
+            :playerAge="age" @update:playerAge="newValue => age = newValue"
+            :operator="searchOperator" @update:operator="newValue => searchOperator = newValue"
+            :lets="lettersFilter" @update:lets="newValue => lettersFilter = newValue"
+            :clubFilter="clubLetterFilter" @update:clubFilter="newValue => clubLetterFilter = newValue"
+        />
     </div>
 
     <div>
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-[#130065] dark:text-white">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-[#39A0ED] dark:text-white">
                 <tr>
                     <th v-for="key in columns" :key="key" @click="sortBy(key)" :class="{ active: sortKey == key }" class="px-6 py-3 cursor-pointer">
                         {{ capitalize(key) }}
@@ -28,7 +28,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="entry in filteredData" :key="entry" class="bg-white border-b dark:bg-black dark:border-[#130065] dark:text-white">
+                <tr v-for="entry in filteredData" :key="entry" class="bg-white border-b dark:bg-[#1F2739] dark:border-[#39A0ED] dark:text-white">
                     <td v-for="key in columns" :key="key" class="px-6 py-3">
                         {{entry[key]}}
                     </td>
@@ -49,10 +49,10 @@
             <div class="modal-overlay" v-if="modalIsVisible" @click="closeModal()"></div>
         </transition>
         <transition name="slide" appear>
-            <div class="modal relative bg-white rounded-lg shadow dark:bg-[#130065]" v-if="modalIsVisible">
+            <div class="modal relative bg-white rounded-lg shadow dark:bg-[#FB667A]" v-if="modalIsVisible">
                 <PlayerModalComponent :showPlayer="showPlayer"/>
                 <button type="button" class="text-white bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg 
-                text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-[#0de358] dark:hover:text-white" 
+                text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-[#39A0ED] dark:hover:text-white" 
                 @click="closeModal()"
                 >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -117,11 +117,13 @@ export default {
             if(this.lettersFilter){
                 // console.log('COMPUTED FILTER BY LETTER')
                 return data.filter(this.filterByAge).filter((item)=>{
+                    console.log('filter name', item.name)
                     return item.name.toLowerCase().startsWith(this.lettersFilter.toLowerCase());
                 })
             } 
             else if(this.clubLetterFilter){
                 return data.filter(this.filterByAge).filter((item)=>{
+                    console.log('filter club', item.club)
                     return item.club.toLowerCase().startsWith(this.clubLetterFilter.toLowerCase());
                 })
             } 

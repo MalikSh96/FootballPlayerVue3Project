@@ -33,7 +33,7 @@
         <div class="letters-list">
           <div class="letters-wrap" v-for="letter in letters" :key="letter">
             <div v-if="isFilteredByLetter(letter)" class="has-data font-normal hover:font-bold">
-              <input :id="letter" type="radio" :value="letter" 
+              <input :id="letter" type="radio" :value="letter" v-model="lettersHandle"
                 @input="$emit('update:lets', $event.target.value)">
               <label :for="letter">{{ letter }}</label>
             </div>
@@ -52,7 +52,7 @@
         <div class="letters-list">
           <div class="letters-wrap" v-for="club in letters" :key="club">
             <div v-if="isClubFilteredByLetter(club)" class="has-data font-normal hover:font-bold">
-              <input :id="club" type="radio" :value="club" 
+              <input :id="club" type="radio" :value="club" v-model="clubLetterHandle"
                 @input="$emit('update:clubFilter', $event.target.value)">
               <label :for="club">{{ club }}</label>
             </div>
@@ -85,10 +85,11 @@
     },
     data() {
       return {
-        // lettersHandle: ''
+        lettersHandle: '',
+        clubLetterHandle: '',
       }
     },
-    emits: ['update:playerAge', 'update:operator', 'update:lets', 'update:clubFilter'],
+    emits: ['update:playerAge', 'update:operator', 'update:lets', 'update:clubFilter', 'close'],
     computed: {
       letters() {
         let letters = []
@@ -97,31 +98,26 @@
         }
         return letters
       },
-      // clubLetters() {
-      //   let letters = []
-      //   for(let i = "A".charCodeAt(0); i <= "Z".charCodeAt(0); i++) {
-      //     letters.push(String.fromCharCode([i]))
-      //   }
-      //   return letters
-      // },
     },
     watch: {
       lets(value) {
         console.log('what is lets', this.lets)
-        console.log('test', value)
-        // this.lettersHandle = value
+        console.log('lets value', value)
+        this.lettersHandle = value
       },
       clubFilter(value) {
-        console.log('what is club filter', this.lets)
-        console.log('test', value)
-        // this.lettersHandle = value
+        console.log('what is club filter', this.clubFilter)
+        console.log('clubfilter value', value)
+        this.clubLetterHandle = value
       },
     },
     methods: {
       rowsResetter() {
+        // this.lettersHandle = '';
         this.$emit('update:lets')
       },
       clubRowsResetter() {
+        // this.clubLetterHandle = '';
         this.$emit('update:clubFilter')
       },
       isFilteredByLetter(letter) {

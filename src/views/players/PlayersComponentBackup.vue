@@ -1,6 +1,6 @@
 <template>
-  <html class="dark bg-black">
-    <h1 class="text-2xl font-bold text-[#0de358]">The Players</h1>
+  <html class="dark bg-[#1F2739]">
+    <h1 class="text-2xl font-bold text-[#FB667A]">FUT PLAYERS DISPLAYER</h1>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
       <label class="pr-3 text-white">Row limit</label>
       <select v-model="perPage" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 shadow-sm
@@ -24,7 +24,7 @@
         <ul class="inline-flex space-x-2">
             <li class="page-item">
                 <button type="button" 
-                class="flex items-center justify-center w-10 h-10 text-[#0de358] 
+                class="flex items-center justify-center w-10 h-10 text-[#FB667A] 
                 transition-colors duration-150 rounded-full focus:shadow-outline hover:bg-white hover:font-bold" 
                 v-if="page != 1" @click="page--; loadJugadores(page, perPage)"
                 > 
@@ -36,7 +36,7 @@
                 </button>
             </li>
             <li class="page-item">
-                <button type="button" class="w-10 h-10 text-[#0de358] transition-colors duration-150 
+                <button type="button" class="w-10 h-10 text-[#FB667A] transition-colors duration-150 
                 rounded-full focus:shadow-outline hover:bg-white hover:font-bold" 
                 v-for="(pageNumber, key) in setPages" :key="key" 
                 @click="page = pageNumber; loadJugadores(page, perPage);"> {{ pageNumber }} 
@@ -44,7 +44,7 @@
             </li>
             <li class="page-item">
                 <button type="button" @click="page++; loadJugadores(page, perPage);" v-if="page < pagesTotal" class="flex items-center 
-                justify-center w-10 h-10 text-[#0de358] 
+                justify-center w-10 h-10 text-[#FB667A] 
                 transition-colors duration-150 rounded-full focus:shadow-outline hover:bg-white hover:font-bold"
                 >
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">

@@ -8,7 +8,7 @@ import { defineProps } from "vue";
 <template>
     <div v-for="(player, key) in props.showPlayer" :key="key">
         <!-- Modal content -->
-        <div class="flex justify-between items-start p-5 rounded-t border-b dark:border-[#0de358]">
+        <div class="flex justify-between items-start p-5 rounded-t border-b dark:border-[#39A0ED]">
             <h3 class="text-xl font-semibold text-gray-900 lg:text-2xl dark:text-white">
                 Player details:
             </h3>
