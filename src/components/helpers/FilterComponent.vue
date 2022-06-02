@@ -2,24 +2,20 @@
   <div class="modal-backdrop">
     <div class="modal">
       <header class="modal-header">
-        <slot name="header">
-          <p class="font-bold text-white">FILTER THE PLAYERS TABLE</p>
-        </slot>
+        <p class="font-bold text-white">FILTER THE PLAYERS TABLE</p>
         <button type="button" class="btn-close" @click="close">
           x
         </button>
       </header>
 
       <section class="modal-body">
-        <slot name="body">
-          <p class="font-bold text-left text-white">Filter by players age:</p>
-        </slot>
+        <p class="font-bold text-left text-white">Filter by players age:</p>
         <div>
           <p class="text-white">Filter by age:</p>
           <select class="border-2 mb-5 rounded h-10 p-1" 
               @input="$emit('update:operator', $event.target.value)">
             <option value="" selected>None</option>
-            <option value="=">Equals to</option> <!-- THIS OPTION IS NOT WORKING RN-->
+            <option value="=">Equals to</option>
             <option value=">">Bigger than</option>
             <option value="<">Lesser than</option>
           </select>
@@ -27,9 +23,7 @@
             class="border-2 mb-5 rounded h-10 p-2" placeholder="Age" type="number">
         </div>
 
-        <slot name="body">
-          <p class="font-bold text-left text-white">Filter by name letter:</p>
-        </slot>
+        <p class="font-bold text-left text-white">Filter by name letter:</p>
         <div class="letters-list">
           <div class="letters-wrap" v-for="letter in letters" :key="letter">
             <div v-if="isNameFilteredByLetter(letter)" class="has-data font-normal hover:font-bold">
@@ -46,9 +40,7 @@
           </button>
         </div>
 
-        <slot name="body">
-          <p class="font-bold text-left text-white">Filter by club letter:</p>
-        </slot>
+        <p class="font-bold text-left text-white">Filter by club letter:</p>
         <div class="letters-list">
           <div class="letters-wrap" v-for="letter in letters" :key="letter">
             <div v-if="isClubFilteredByLetter(letter)" class="has-data font-normal hover:font-bold">

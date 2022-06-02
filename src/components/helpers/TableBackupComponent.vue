@@ -6,7 +6,7 @@
             </svg>
         </button>
 
-        <modal-component v-show="isExtraModalVisible" @close="closeExtraModal" :rows="rows" 
+        <filter-component v-show="isExtraModalVisible" @close="closeExtraModal" :rows="rows" 
             :playerAge="age" @update:playerAge="newValue => age = newValue"
             :operator="searchOperator" @update:operator="newValue => searchOperator = newValue"
             :nameFiltering="nameFilter" @update:nameFiltering="newValue => nameFilter = newValue"
@@ -68,12 +68,12 @@
 
 <script>
 import PlayerModalComponent from '@/components/helpers/PlayerModalComponent.vue'
-import ModalComponent from '../ModalComponent.vue'
+import FilterComponent from '@/components/helpers/FilterComponent.vue'
 
 export default {
     components: {
         PlayerModalComponent,
-        ModalComponent,
+        FilterComponent,
     },
     props: {
         playersData: Object,
