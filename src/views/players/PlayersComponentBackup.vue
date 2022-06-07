@@ -54,11 +54,8 @@
                 </svg>
                 </button>
             </li>
-          <!-- <p class="py-2 italic text-white">Current page: {{ page }}</p>
-          <p class="py-2 italic text-white">|| Total pages: {{ pagesTotal }}</p> -->
         </ul>
       </nav>
-
     </div>
   </html>
 </template>
@@ -73,7 +70,7 @@ export default {
     TableBackupComponent
   },
   setup() {
-    //const, because obect itself won't change, just the properties inside
+    //const, because object itself won't change, just the properties inside
     const jugadores = reactive({
       ballers: []
     })
