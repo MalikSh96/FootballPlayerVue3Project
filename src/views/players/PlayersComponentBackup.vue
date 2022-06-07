@@ -2,7 +2,7 @@
   <html class="dark bg-[#1F2739]">
     <h1 class="text-2xl font-bold text-[#FB667A]">FUT PLAYERS DISPLAYER</h1>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <label class="pr-3 text-white">Row limit</label>
+      <label class="pr-3 text-white">Display limit</label>
       <select v-model="perPage" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 shadow-sm
                                     border-black-100 placeholder-blueGray-300 text-black bg-white rounded text-sm shadow
                                     focus:outline-none focus:ring-indigo-600 ease-linear transition-all duration-150">
@@ -10,8 +10,8 @@
       </select>
 
       <div class="text-white py-5">
-        <p>Current page: {{ page }}</p>
-        <p>Total pages: {{ pagesTotal }}</p>
+        <p>Current page: {{ page }} || Total pages: {{ pagesTotal }}</p>
+        <!-- <p>Total pages: {{ pagesTotal }}</p> -->
       </div>
 
       <form id="search">
