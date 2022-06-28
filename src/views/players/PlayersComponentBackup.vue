@@ -138,6 +138,7 @@ export default {
     if(localStorage.perPage) {
       this.perPage = localStorage.perPage
     }
+    
     this.loadJugadores(1, this.perPage)
     this.prevPlayers = this.jugadores
 	},
